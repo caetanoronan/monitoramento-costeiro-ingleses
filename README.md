@@ -8,8 +8,9 @@ Projeto IFSC (Campus Florianópolis) para monitorar o alargamento artificial da 
 - `query_gpkg.py`: script para inspecionar o GeoPackage de setores (`SC_setores_CD2022.gpkg`).
 
 ## Como visualizar
-- Abra `apresentacao.html` no navegador para ver a apresentação e o mapa embutido.
-- Clique em “Abrir mapa em nova aba” (na aba Importância) para abrir `mapa_estudo.html` em tela cheia.
+- GitHub Pages (online): https://caetanoronan.github.io/monitoramento-costeiro-ingleses/
+- Mapa direto: https://caetanoronan.github.io/monitoramento-costeiro-ingleses/mapa_estudo.html
+- Local: abra `apresentacao.html` no navegador; use o link “Abrir mapa em nova aba” ou acesse `mapa_estudo.html`.
 
 ## Requisitos locais
 - Python 3.14 (ambiente `.venv` já configurado).
