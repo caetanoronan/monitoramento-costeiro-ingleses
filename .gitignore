@@ -1,0 +1,26 @@
+.venv/
+__pycache__/
+*.pyc
+*.log
+*.DS_Store
+
+# Dados pesados e geoespaciais
+*.zip
+*.gpkg
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.geojson
+*.laz
+*.las
+*.obj
+*.tif
+*.tiff
+*.laz
+
+# Saídas temporárias / caches
+*.aux.xml
+*.lock
+*.tmp

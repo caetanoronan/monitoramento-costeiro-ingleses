@@ -1,0 +1,32 @@
+CRONOGRAMA_DETALHADO"
+ID	Atividade / Tarefa	Responsável	Mês 1	Mês 2	Mês 3	Mês 4	Mês 5	Mês 6	Mês 7	Mês 8	Mês 9	Mês 10	Mês 11	Mês 12	Entregas
+1	ETAPA 1: PREPARAÇÃO	Coordenador													
+1.1	Planejamento Interno e Definição de Escopo	Coordenador	X	X											Doc. de Escopo
+1.2	Obtenção de Licenças de Voo (DECEA, ANAC)	Piloto/Técnico		X											Licenças Aprovadas
+1.3	Aquisição de Materiais Consumíveis	Bolsista I		X											Materiais em estoque
+1.4	Briefing e Treinamento da Equipe	Coordenador		X											Equipe alinhada
+2	ETAPA 2: CAMPO - Campanha 1	Equipe Campo													
+2.1	Implantação/Georref. dos Pontos de Controle (GCPs)	Técnico/Bolsista I		X											Coordenadas dos GCPs
+2.2	Aquisição Aerofotogramétrica (Voo)	Piloto/Técnico		X											Imagens Brutas (SD)
+3	ETAPA 3: PROCESSAMENTO - Camp. 1	Pesquisador/Bolsistas													
+3.1	Download, Backup e Organização dos Dados	Bolsista II			X										Banco de Dados Inicial
+3.2	Processamento Fotogramétrico (Ortomosaico + MDS)	Pesquisador			X	X									Ortomosaico_01, MDS_01
+3.3	Análise Preliminar e Controle de Qualidade	Coordenador/Pesquisador				X									Relatório de Qualidade
+4	ETAPA 4: CAMPO - Campanha 2	Equipe Campo													
+4.1	Verificação dos GCPs	Técnico/Bolsista I							X						Checklist GCPs
+4.2	Aquisição Aerofotogramétrica (Voo)	Piloto/Técnico							X						Imagens Brutas (SD)
+5	ETAPA 5: ANÁLISE COMPARATIVA 1	Pesquisador/Bolsistas													
+5.1	Processamento Campanha 2	Pesquisador/Bolsista II								X					Ortomosaico_02, MDS_02
+5.2	Geração de Mapa de Diferença (DoD 1 vs 2)	Pesquisador								X					DoD_1-2, Relatório Vol.
+5.3	Análise de Deslocamento de Linha de Costa	Bolsista II								X					Shapefile_LinhaCosta
+6	ETAPA 6: CAMPO - Campanha 3	Equipe Campo													
+6.1	Aquisição Aerofotogramétrica (Voo)	Piloto/Técnico									X				Imagens Brutas (SD)
+7	ETAPA 7: ANÁLISE FINAL	Pesquisador/Bolsistas													
+7.1	Processamento Campanha 3	Pesquisador/Bolsista II										X			Ortomosaico_03, MDS_03
+7.2	Geração de Mapas de Diferença Finais	Pesquisador										X	X		DoD_1-3, DoD_2-3
+7.3	Análise Integrada e Síntese dos Resultados	Coordenador/Pesquisador											X	X	Dados para Relatório
+8	ETAPA 8: DIVULGAÇÃO	Equipe													
+8.1	Redação do Relatório Técnico Final	Coordenador/Pesquisador											X	X	Relatório Final (.pdf)
+8.2	Preparação de Artigo Científico	Pesquisador/Coordenador												X	Rascunho do Artigo
+8.3	Organização do Seminário de Divulgação	Bolsistas												X	Seminário Realizado
+8.4	Organização e Entrega dos Produtos Finais	Bolsista II		

@@ -1,0 +1,13 @@
+Cod,Item,Qtde,Unidade,CustoUnitario,Total,Observacao
+51001,Bolsa pesquisa Nível Superior,12,Mês,2000,24000,Processamento avançado/análise
+51002,Bolsa extensão Nível Técnico (Grad. I),12,Mês,600,7200,Campo e processamento inicial
+51003,Bolsa extensão Nível Técnico (Grad. II),12,Mês,600,7200,SIG e produtos cartográficos
+52001,Baterias extras DJI P4RTK,2,Unidade,800,1600,Autonomia de voo
+52002,SD 128GB U3,3,Unidade,150,450,Armazenamento seguro
+52003,Alvos GCP (lona),1,Lote,400,400,20 alvos duráveis
+52004,Material expediente/gráfico,1,Lote,300,300,"Toner, papel, pastas"
+52005,HD externo 2TB,2,Unidade,250,500,Backup
+53001,Transporte para campo,6,Saída,200,1200,Combustível/deslocamento
+Subtotal,Subtotal,,,,42600,
+54001,Reserva técnica (10%),,Percentual,,4260,Contingências
+Total Geral,Total,,,,46860,

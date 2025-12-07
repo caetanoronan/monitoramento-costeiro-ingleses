@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoramento Aerofotogramétrico da Dinâmica Costeira - Praia dos Ingleses</title>
+  <style>
+    :root {
+      /* BuGn (3 cores): #e5f5f9, #99d8c9, #2ca25f */
+      --accent-1: #e5f5f9;
+      --accent-2: #99d8c9;
+      --accent-3: #2ca25f;
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --stroke: #1f2937;
+      --accent: var(--accent-2);
+    }
+    .light {
+      --bg: #f5fbfc;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #4b5563;
+      --stroke: #d7e5e8;
+      --accent: var(--accent-3);
+      color: var(--text);
+      background: radial-gradient(circle at 20% 20%, rgba(44,162,95,0.08), transparent 30%),
+                  radial-gradient(circle at 80% 0%, rgba(153,216,201,0.18), transparent 25%),
+                  var(--bg);
+    }
+    .dark {
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --stroke: #1f2937;
+      --accent: var(--accent-2);
+      background: radial-gradient(circle at 20% 20%, rgba(44,162,95,0.08), transparent 30%),
+                  radial-gradient(circle at 80% 0%, rgba(153,216,201,0.15), transparent 25%),
+                  var(--bg);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Montserrat", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 32px 18px 48px;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: baseline;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    h2 {
+      margin: 24px 0 8px;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-3);
+    }
+    p { margin: 0 0 10px; color: var(--muted); }
+    .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+    }
+    ul { margin: 6px 0 0 18px; padding: 0; color: var(--text); }
+    li { margin-bottom: 6px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--stroke);
+      padding: 8px 10px;
+      text-align: left;
+    }
+    th { background: #0b1220; color: var(--accent); font-weight: 600; }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(44,162,95,0.12);
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    .timeline td { text-align: center; font-weight: 600; }
+    .muted { color: var(--muted); }
+    footer { margin-top: 28px; color: var(--muted); font-size: 0.9rem; }
+    .row-stage { background: rgba(153,216,201,0.08); }
+    .row-campo { background: rgba(44,162,95,0.1); }
+    .row-proc { background: rgba(44,162,95,0.07); }
+    .row-div { background: rgba(153,216,201,0.05); }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 14px;
+    }
+    .tab-btn {
+      border: 1px solid var(--stroke);
+      background: #0b1220;
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .tab-btn.active {
+      background: rgba(44,162,95,0.18);
+      color: var(--accent-3);
+      border-color: rgba(44,162,95,0.35);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <h1>Monitoramento Aerofotogramétrico da Dinâmica Costeira</h1>
+      <span class="pill">IFSC - Campus Florianópolis</span>
+      <button id="modeToggle" class="tab-btn" style="margin-left:auto;">Alternar tema</button>
+    </header>
+    <p><strong>Alargamento Artificial da Orla e Avanço das Dunas Urbanas - Praia dos Ingleses, Florianópolis/SC</strong></p>
+    <p>Projeto de pesquisa e extensão (12 meses) para avaliar a estabilidade do alargamento artificial da orla e monitorar o avanço das dunas urbanas via fotogrametria com drones (P4 RTK) e análise espacial em QGIS/Metashape.</p>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="introducao">Introdução</button>
+      <button class="tab-btn" data-tab="importancia">Importância</button>
+      <button class="tab-btn" data-tab="metodologia">Metodologia</button>
+      <button class="tab-btn" data-tab="cronograma">Cronograma</button>
+      <button class="tab-btn" data-tab="orcamento">Orçamento</button>
+      <button class="tab-btn" data-tab="riscos">Riscos</button>
+      <button class="tab-btn" data-tab="glossario">Glossário</button>
+      <button class="tab-btn" data-tab="referencias">Referências</button>
+     </div>    <section id="introducao" class="tab-panel active">
+      <h2>Introdução</h2>
+      <p>A proposta integra pesquisa e extensão para monitorar, com drones e SIG, o efeito do engordamento da praia e o avanço de dunas sobre a área urbana na Praia dos Ingleses. O foco é produzir evidências quantitativas (orto, MDS, DoD) e insumos úteis à gestão municipal e à formação de alunos.</p>
+      <div class="grid">
+        <div class="card">
+          <strong>Objetivo geral</strong>
+          <ul>
+            <li>Quantificar a evolução morfológica da faixa de areia alargada e da frente dunar.</li>
+            <li>Gerar ortomosaicos, MDS e DoD em três janelas sazonais para embasar decisões.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Escopo</strong>
+          <ul>
+            <li>Trecho de ~3 km entre linha de preamar e zona urbana adjacente.</li>
+            <li>GCPs geodésicos, PPK, GSD &le; 3 cm, 80/70% de recobrimento.</li>
+            <li>Produtos: GeoTIFF, LAZ/OBJ, shapefiles, relatório, artigo e seminário.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Equipe</strong>
+          <ul>
+            <li>Coordenador (gestão, qualidade, relação institucional).</li>
+            <li>Pesquisador responsável (processamento avançado e análises).</li>
+            <li>Piloto/Técnico de campo + 2 bolsistas (campo, SIG e produtos).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="importancia" class="tab-panel">
+      <h2>Por que monitorar este trecho</h2>
+      <p>O litoral norte de Florianópolis combina forte crescimento demográfico, fluxo turístico intenso e expansão urbana rápida. Na Praia dos Ingleses, o alargamento artificial da orla e o avanço das dunas urbanas podem alterar acessos, infraestrutura e o cotidiano dos moradores. Monitorar com aerofotogrametria cria uma linha de base objetiva para decisões de planejamento.</p>
+      <div class="grid">
+        <div class="card">
+          <strong>Transformações em curso</strong>
+          <ul>
+            <li>Adensamento residencial e verticalização pressionando a faixa costeira.</li>
+            <li>Alta sazonalidade turística gerando picos de circulação e uso da praia.</li>
+            <li>Reorganização viária e novas frentes de urbanização no entorno imediato.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Efeitos do alargamento</strong>
+          <ul>
+            <li>Mudança na largura da faixa de areia e no padrão de deposição sedimentar.</li>
+            <li>Alterações no escoamento de ventos que podem favorecer migração de dunas.</li>
+            <li>Redistribuição de usos recreativos e de serviços na orla.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Riscos e gestão urbana</strong>
+          <ul>
+            <li>Encobrir vias e lotes por avanço de areia; necessidade de faixas de proteção.</li>
+            <li>Impacto em drenagem, acessos e mobiliário urbano nas temporadas de pico.</li>
+            <li>Exigência de zoneamento e rotas de circulação que minimizem conflito praia–bairro.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Por que aerofotogrametria</strong>
+          <ul>
+            <li>Série temporal de alta resolução (cm) para medir deslocamento de dunas e frente de praia.</li>
+            <li>Integração com dados demográficos e fluxo turístico para priorizar intervenções.</li>
+            <li>Base transparente para diálogo entre gestão municipal, moradores e setor turístico.</li>
+          </ul>
+        </div>
+        <div class="card" style="grid-column: 1 / -1;">
+          <strong>Mapa de referência</strong>
+          <p class="muted">Visualização interativa do recorte de estudo, com camada de dunas e área alargada.</p>
+          <div style="position:relative;padding-top:56.25%;border:1px solid var(--stroke);border-radius:12px;overflow:hidden;background:#0b1220;">
+            <iframe src="mapa_estudo.html" title="Mapa Praia dos Ingleses" style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+          </div>
+          <p style="margin-top:10px;"><a href="mapa_estudo.html" target="_blank" style="color:var(--accent-3);text-decoration:none;font-weight:700;">Abrir mapa em nova aba ↗</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="metodologia" class="tab-panel">
+      <h2>Metodologia</h2>
+      <p>Fluxo completo: planejar voos, coletar GCPs, adquirir imagens em três campanhas, processar em Metashape, analisar no QGIS e integrar resultados em série temporal, entregando produtos e ações de extensão.</p>
+      <div class="grid">
+        <div class="card">
+          <strong>Planejamento e aquisições</strong>
+          <ul>
+            <li>Drone DJI Phantom 4 RTK; recobrimento 80/70%; altitude ajustada para GSD &le; 3 cm.</li>
+            <li>15-20 GCPs com GNSS geodésico de dupla frequência (Topcon/Trimble).</li>
+            <li>Campanhas: M2 (baseline), M7 (pós-inverno), M10 (pós-verão).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Processamento</strong>
+          <ul>
+            <li>Metashape: alinhamento, georreferenciamento via GCPs/PPK, nuvem densa, MDS, orto.</li>
+            <li>DoD em Metashape/QGIS; vetorização de linha de costa e frente dunar no QGIS.</li>
+            <li>Controle de qualidade: checagem de RMSE, densidade de pontos, consistência de GCPs.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Entrega e extensão</strong>
+          <ul>
+            <li>Relatório técnico, artigo, seminário aberto e visualizador 3D.</li>
+            <li>Capacitação dos bolsistas em voo, SIG, fotogrametria e análise temporal.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="cronograma" class="tab-panel">
+      <h2>Cronograma (12 meses)</h2>
+      <p>Síntese visual dos marcos por trimestre e tabela detalhada por tarefa, responsável, meses e entregas.</p>
+      <div class="card">
+        <table class="timeline">
+          <tr>
+            <th>Atividade</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5</th><th>M6</th><th>M7</th><th>M8</th><th>M9</th><th>M10</th><th>M11</th><th>M12</th><th>Entrega</th>
+          </tr>
+          <tr class="row-stage"><td>Preparação (licenças, materiais, briefing)</td><td>X</td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Doc. escopo/licenças</td></tr>
+          <tr class="row-campo"><td>Campanha 1 (voo + dados)</td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Imagens brutas</td></tr>
+          <tr class="row-proc"><td>Processamento Camp. 1</td><td></td><td></td><td>X</td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Orto_01, MDS_01, CQ</td></tr>
+          <tr class="row-campo"><td>Campanha 2 (pós-inverno)</td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td>Imagens brutas</td></tr>
+          <tr class="row-proc"><td>DoD 1-2 + linha de costa</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td></td><td>DoD_1-2</td></tr>
+          <tr class="row-campo"><td>Campanha 3 (pós-verão)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td>Imagens brutas</td></tr>
+          <tr class="row-proc"><td>DoD finais e síntese</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td>X</td><td></td><td>DoD_1-3, DoD_2-3</td></tr>
+          <tr class="row-div"><td>Relatório, artigo, seminário</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td>X</td><td>PDF final + evento</td></tr>
+        </table>
+      </div>
+
+      <h3>Cronograma detalhado</h3>
+      <div class="card" style="overflow-x:auto;">
+        <table>
+          <tr><th>ID</th><th>Atividade / Tarefa</th><th>Responsável</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5</th><th>M6</th><th>M7</th><th>M8</th><th>M9</th><th>M10</th><th>M11</th><th>M12</th><th>Entregas</th></tr>
+          <tr class="row-stage"><td>1</td><td>ETAPA 1: PREPARAÇÃO</td><td>Coordenador</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr class="row-stage"><td>1.1</td><td>Planejamento Interno e Definição de Escopo</td><td>Coordenador</td><td>X</td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Doc. de Escopo</td></tr>
+          <tr class="row-stage"><td>1.2</td><td>Obtenção de Licenças de Voo (DECEA, ANAC)</td><td>Piloto/Técnico</td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Licenças Aprovadas</td></tr>
+          <tr class="row-stage"><td>1.3</td><td>Aquisição de Materiais Consumíveis</td><td>Bolsista I</td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Materiais em estoque</td></tr>
+          <tr class="row-stage"><td>1.4</td><td>Briefing e Treinamento da Equipe</td><td>Coordenador</td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Equipe alinhada</td></tr>
+          <tr class="row-campo"><td>2</td><td>ETAPA 2: CAMPO - Campanha 1</td><td>Equipe Campo</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr class="row-campo"><td>2.1</td><td>Implantação/Georref. dos Pontos de Controle (GCPs)</td><td>Técnico/Bolsista I</td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Coordenadas dos GCPs</td></tr>
+          <tr class="row-campo"><td>2.2</td><td>Aquisição Aerofotogramétrica (Voo)</td><td>Piloto/Técnico</td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Imagens Brutas (SD)</td></tr>
+          <tr class="row-proc"><td>3</td><td>ETAPA 3: PROCESSAMENTO - Camp. 1</td><td>Pesquisador/Bolsistas</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr class="row-proc"><td>3.1</td><td>Download, Backup e Organização dos Dados</td><td>Bolsista II</td><td></td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Banco de Dados Inicial</td></tr>
+          <tr class="row-proc"><td>3.2</td><td>Processamento Fotogramétrico (Ortomosaico + MDS)</td><td>Pesquisador</td><td></td><td></td><td>X</td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Ortomosaico_01, MDS_01</td></tr>
+          <tr class="row-proc"><td>3.3</td><td>Análise Preliminar e Controle de Qualidade</td><td>Coordenador/Pesquisador</td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Relatório de Qualidade</td></tr>
+          <tr class="row-campo"><td>4</td><td>ETAPA 4: CAMPO - Campanha 2</td><td>Equipe Campo</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr class="row-campo"><td>4.1</td><td>Verificação dos GCPs</td><td>Técnico/Bolsista I</td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td>Checklist GCPs</td></tr>
+          <tr class="row-campo"><td>4.2</td><td>Aquisição Aerofotogramétrica (Voo)</td><td>Piloto/Técnico</td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td></td><td></td><td>Imagens Brutas (SD)</td></tr>
+          <tr class="row-proc"><td>5</td><td>ETAPA 5: ANÁLISE COMPARATIVA 1</td><td>Pesquisador/Bolsistas</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr class="row-proc"><td>5.1</td><td>Processamento Campanha 2</td><td>Pesquisador/Bolsista II</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td></td><td>Ortomosaico_02, MDS_02</td></tr>
+          <tr class="row-proc"><td>5.2</td><td>Geração de Mapa de Diferença (DoD 1 vs 2)</td><td>Pesquisador</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td></td><td>DoD_1-2, Relatório Vol.</td></tr>
+          <tr class="row-proc"><td>5.3</td><td>Análise de Deslocamento de Linha de Costa</td><td>Bolsista II</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td></td><td>Shapefile_LinhaCosta</td></tr>
+          <tr class="row-campo"><td>6</td><td>ETAPA 6: CAMPO - Campanha 3</td><td>Equipe Campo</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr class="row-campo"><td>6.1</td><td>Aquisição Aerofotogramétrica (Voo)</td><td>Piloto/Técnico</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td></td><td>Imagens Brutas (SD)</td></tr>
+          <tr class="row-proc"><td>7</td><td>ETAPA 7: ANÁLISE FINAL</td><td>Pesquisador/Bolsistas</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr class="row-proc"><td>7.1</td><td>Processamento Campanha 3</td><td>Pesquisador/Bolsista II</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td></td><td></td><td>Ortomosaico_03, MDS_03</td></tr>
+          <tr class="row-proc"><td>7.2</td><td>Geração de Mapas de Diferença Finais</td><td>Pesquisador</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td>X</td><td></td><td>DoD_1-3, DoD_2-3</td></tr>
+          <tr class="row-proc"><td>7.3</td><td>Análise Integrada e Síntese dos Resultados</td><td>Coordenador/Pesquisador</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td>X</td><td>Dados para Relatório</td></tr>
+          <tr class="row-div"><td>8</td><td>ETAPA 8: DIVULGAÇÃO</td><td>Equipe</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr class="row-div"><td>8.1</td><td>Redação do Relatório Técnico Final</td><td>Coordenador/Pesquisador</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td>X</td><td>Relatório Final (.pdf)</td></tr>
+          <tr class="row-div"><td>8.2</td><td>Preparação de Artigo Científico</td><td>Pesquisador/Coordenador</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td>Rascunho do Artigo</td></tr>
+          <tr class="row-div"><td>8.3</td><td>Organização do Seminário de Divulgação</td><td>Bolsistas</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td>Seminário Realizado</td></tr>
+          <tr class="row-div"><td>8.4</td><td>Organização e Entrega dos Produtos Finais</td><td>Bolsista II</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="orcamento" class="tab-panel">
+      <h2>Orçamento (R$ 46.860)</h2>
+      <p>Estrutura prioriza bolsas (formação e execução), itens críticos de campo/processamento e uma reserva de contingência para imprevistos.</p>
+      <div class="card">
+        <table>
+          <tr><th>Rubrica</th><th>Valor (R$)</th><th>Observação</th></tr>
+          <tr><td>Pessoal/Bolsas</td><td>38.400</td><td>1 bolsa superior (24.000) + 2 bolsas técnicas (7.200 cada)</td></tr>
+          <tr><td>Equip./Consumo</td><td>3.000</td><td>Baterias, SD, alvos GCP, material gráfico, HDs</td></tr>
+          <tr><td>Serviços terceiros</td><td>1.200</td><td>Transporte/deslocamento</td></tr>
+          <tr><td>Reserva técnica (10%)</td><td>4.260</td><td>Contingências</td></tr>
+          <tr><th>Total</th><th>46.860</th><th></th></tr>
+        </table>
+      </div>
+      <h3>Detalhamento</h3>
+      <div class="card">
+        <table>
+          <tr><th>Cód.</th><th>Item</th><th>Qtde</th><th>Unid.</th><th>R$/un</th><th>Total (R$)</th><th>Observação</th></tr>
+          <tr><td>51001</td><td>Bolsa pesquisa Nível Superior</td><td>12</td><td>Mês</td><td>2.000</td><td>24.000</td><td>Processamento avançado/análise</td></tr>
+          <tr><td>51002</td><td>Bolsa extensão Técnico (Grad. I)</td><td>12</td><td>Mês</td><td>600</td><td>7.200</td><td>Campo e processamento inicial</td></tr>
+          <tr><td>51003</td><td>Bolsa extensão Técnico (Grad. II)</td><td>12</td><td>Mês</td><td>600</td><td>7.200</td><td>SIG e produtos cartográficos</td></tr>
+          <tr><td>52001</td><td>Baterias extras DJI P4RTK</td><td>2</td><td>Unid.</td><td>800</td><td>1.600</td><td>Autonomia de voo</td></tr>
+          <tr><td>52002</td><td>SD 128GB U3</td><td>3</td><td>Unid.</td><td>150</td><td>450</td><td>Armazenamento seguro</td></tr>
+          <tr><td>52003</td><td>Alvos GCP (lona)</td><td>1</td><td>Lote</td><td>400</td><td>400</td><td>20 alvos duráveis</td></tr>
+          <tr><td>52004</td><td>Material expediente/gráfico</td><td>1</td><td>Lote</td><td>300</td><td>300</td><td>Toner, papel, pastas</td></tr>
+          <tr><td>52005</td><td>HD externo 2TB</td><td>2</td><td>Unid.</td><td>250</td><td>500</td><td>Backup</td></tr>
+          <tr><td>53001</td><td>Transporte para campo</td><td>6</td><td>Saída</td><td>200</td><td>1.200</td><td>Combustível/deslocamento</td></tr>
+          <tr><td></td><td><strong>Subtotal</strong></td><td></td><td></td><td></td><td><strong>42.600</strong></td><td></td></tr>
+          <tr><td>54001</td><td>Reserva técnica (10%)</td><td></td><td>Percentual</td><td></td><td>4.260</td><td>Contingências</td></tr>
+          <tr><td></td><td><strong>Total Geral</strong></td><td></td><td></td><td></td><td><strong>46.860</strong></td><td></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="riscos" class="tab-panel">
+      <h2>Riscos e mitigação</h2>
+      <p>Principais riscos e contramedidas para assegurar continuidade das campanhas, qualidade dos dados e entrega dos produtos.</p>
+      <div class="grid">
+        <div class="card">
+          <strong>Operação de voo</strong>
+          <ul>
+            <li>Clima/vento: janelas flexíveis e replanejamento rápido; monitoramento de previsão.</li>
+            <li>Baterias/SD: redundância, inspeção pré-voo e rotação de mídias.</li>
+            <li>GCPs: alvos duráveis, revisão antes de cada campanha, registro fotográfico.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Dados e software</strong>
+          <ul>
+            <li>Backups 3-2-1 (campo, HD externo, nuvem/servidor) e verificação de integridade.</li>
+            <li>Licença Metashape validada; QGIS/PDAL como fallback para DoD e vetores.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Equipe e prazos</strong>
+          <ul>
+            <li>Substitutos treinados e guia de procedimentos; divisão clara de responsabilidades.</li>
+            <li>Licenças DECEA/ANAC solicitadas no M1 e monitoradas até a execução.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="glossario" class="tab-panel">
+      <h2>Glossário</h2>
+      <p>Termos-chave para leitura rápida dos produtos e métodos empregados.</p>
+      <div class="grid">
+        <div class="card">
+          <strong>GCP (Ground Control Point)</strong>
+          <p>Ponto de controle no solo usado para georreferenciar e ajustar a precisão dos produtos fotogramétricos.</p>
+        </div>
+        <div class="card">
+          <strong>GSD (Ground Sample Distance)</strong>
+          <p>Tamanho do pixel no terreno (cm/pixel); define a resolução espacial do ortomosaico.</p>
+        </div>
+        <div class="card">
+          <strong>MDS (Modelo Digital de Superfície)</strong>
+          <p>Modelo de elevação que representa todas as superfícies (solo + objetos), derivado da nuvem densa.</p>
+        </div>
+        <div class="card">
+          <strong>DoD (Difference of DSM)</strong>
+          <p>Mapa de diferença entre MDS de campanhas distintas para estimar erosão/deposição (cálculo volumétrico).</p>
+        </div>
+        <div class="card">
+          <strong>PPK (Pos-Processamento Cinemático)</strong>
+          <p>Método de correção de posição GNSS aplicado após o voo para elevar a acurácia dos registros.</p>
+        </div>
+        <div class="card">
+          <strong>RTK (Real Time Kinematic)</strong>
+          <p>Correção GNSS em tempo real usada pelo drone para melhorar a precisão das coordenadas de imagem.</p>
+        </div>
+        <div class="card">
+          <strong>Ortomosaico</strong>
+          <p>Imagem aérea corrigida geometricamente, com escala uniforme, adequada para medições em planta.</p>
+        </div>
+        <div class="card">
+          <strong>Nuvem de pontos densa</strong>
+          <p>Conjunto de pontos 3D gerado pelo SfM, base para MDS e modelos texturizados.</p>
+        </div>
+        <div class="card">
+          <strong>Recobrimento longitudinal/lateral</strong>
+          <p>Sobreposição entre fotos consecutivas nas direções de voo e faixas adjacentes, essencial para o SfM.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="referencias" class="tab-panel">
+      <h2>Referências e Fundamentação Teórica</h2>
+      <p>Compilação de metodologias e estudos de caso sobre monitoramento costeiro com drones, fotogrametria e análise espacial em praias e dunas.</p>
+      
+      <div class="card">
+        <strong>Base teórica e metodológica</strong>
+        <p>Estudos recentes no Brasil consolidam o uso de VANTs em análises costeiras. Simões et al. (2019) apresentam fluxo completo com DJI Phantom, recobrimento 80/70%, processamento de mosaicos, MDS, perfis de praia e análise de linha de costa. A série temporal permite correlacionar eventos meteorológicos com mudanças morfológicas e erosão costeira.</p>
+        <ul>
+          <li><strong>Simões, R. S.; Oliveira, U. R.; Espinoza, J. M. A.; Albuquerque, M. G.; Alves, D. C. L. (2019).</strong> "Uso de drone de pequeno porte para análise costeira: enfoque metodológico." Revista Brasileira de Geografia Física, v. 12, n. 2, p. 622-640. DOI: https://doi.org/10.26848/rbgf.v12.2.p622-640</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <strong>Checklist de campo (adaptado de Simões et al.)</strong>
+        <ul>
+          <li>Verificação de bateria e calibração do drone antes do voo.</li>
+          <li>Localização de GCPs e verificação de marcações.</li>
+          <li>Configuração de câmera (ISO, shutter, white balance manual).</li>
+          <li>Teste de comunicação com estação base (se RTK).</li>
+          <li>Checagem de clima: vento, nuvens, visibilidade.</li>
+          <li>Arquivo de imagens após cada campanha em mídia única + backup.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <strong>Aplicações em praias e dunas</strong>
+        <ul>
+          <li><strong>Mapeamento multitemporal:</strong> Análise mensal/sazonal do limite praia-duna e frente dunar.</li>
+          <li><strong>Resposta a eventos:</strong> Ciclones, temporais e impacto em erosão costeira.</li>
+          <li><strong>Gestão urbana:</strong> Subsídio ao planejamento de defesa civil e ocupação ordenada.</li>
+          <li><strong>Indicadores:</strong> Volume sedimentar, taxa de recuo/avanço, correlação com maré/ondas.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <strong>Processamento e análise (fluxo consolidado)</strong>
+        <ul>
+          <li>Alinhamento de fotos e georreferenciamento com GCPs no Metashape.</li>
+          <li>Geração de nuvem densa, MDS, ortomosaico em alta resolução.</li>
+          <li>Digitalização de linha de costa e limite dunar no QGIS (polígonos de mudança).</li>
+          <li>Cálculo de deslocamento e variação de volume entre campanhas.</li>
+          <li>Integração com dados de maré, meteorologia e análise temporal.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <strong>Vantagens e desafios documentados</strong>
+        <p><strong>Vantagens:</strong> Resolução ultra-alta (cm/pixel), flexibilidade operacional, baixo custo, aquisição rápida, série temporal detalhada, integração com SIG.</p>
+        <p><strong>Desafios:</strong> Precisão GNSS em áreas abertas, validação de GCPs, processamento computacional, licenças (DECEA), condições meteorológicas, consistência de procedimentos.</p>
+      </div>
+
+      <div class="card">
+        <strong>Desafios em contextos de difícil acesso e biodiversidade heterogênea (Alves, 2023)</strong>
+        <p>Alves (2023) documenta a aplicação de drones em contextos amazônicos (32 comunidades tradicionais no baixo rio Negro). Equipamentos de baixo custo (DJI Mavic Mini 2) reduzem burocracia e facilitam logística, mas enfrentam:</p>
+        <ul>
+          <li><strong>Logística:</strong> Infraestrutura limitada, acesso restrito, transporte e manutenção em campo.</li>
+          <li><strong>Ambiente:</strong> Sobreposição de objetos homogêneos (floresta, rios), sombras, umidade extrema.</li>
+          <li><strong>Processamento:</strong> Classificação de ortomosaicos desafiadora; necessário hardware/software robusto e reclassificação manual.</li>
+          <li><strong>Extensão:</strong> Suporta mapeamento participativo e regularização fundiária de comunidades tradicionais.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <strong>Oportunidades para o projeto (síntese)</strong>
+        <ul>
+          <li>Integrar metodologia de Simões et al. (2019) + aprendizados de contextos complexos (Alves, 2023).</li>
+          <li>Aplicar checklist consolidado e fluxo de processamento em ambiente costeiro (menos sombras, mais definição de linha de costa).</li>
+          <li>Aproveitar experiência em análise temporal para correlacionar com eventos meteorológicos e marés.</li>
+          <li>Potencial de extensão: Capacitar alunos em geotecnologia, suportar gestão municipal e planejamento urbano.</li>
+        </ul>
+      </div>
+
+      <h3>Grupos de pesquisa de referência</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>FURG – Rio Grande/RS</strong>
+          <ul>
+            <li>Laboratório de Geomorfologia e Recursos Hídricos.</li>
+            <li>Foco: Erosão costeira, dinâmica de praias e dunas.</li>
+            <li>Pesquisadores: U.R. Oliveira, R.S. Simões, M.G. Albuquerque.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>IFRS Campus Rio Grande</strong>
+          <ul>
+            <li>Grupo GEOMA (Geotecnologias e Meio Ambiente).</li>
+            <li>Sensoriamento remoto, drones, processamento de imagens.</li>
+            <li>Pesquisador: J.M.A. Espinoza.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>UNICAMP – Campinas/SP</strong>
+          <ul>
+            <li>NEPAM (Núcleo de Estudos e Pesquisas Ambientais).</li>
+            <li>Foco: Drones em ambientes complexos, comunidades tradicionais, geoprocessamento.</li>
+            <li>Pesquisador: J.D.G. Alves.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Referências completas</h3>
+      <div class="card">
+        <ul style="font-size:0.95rem;line-height:1.8;">
+          <li><strong>Simões, R. S.; Oliveira, U. R.; Espinoza, J. M. A.; Albuquerque, M. G.; Alves, D. C. L. (2019).</strong> "Uso de drone de pequeno porte para análise costeira: enfoque metodológico." Revista Brasileira de Geografia Física, v. 12, n. 2, p. 622-640. https://doi.org/10.26848/rbgf.v12.2.p622-640</li>
+          <li><strong>Alves, J. D. G. (2023).</strong> "Possibilidades e desafios no uso de drone para mapeamento de comunidades tradicionais na Amazônia." Revista Brasileira de Geografia Física, v. 16, n. 5, p. 2594-2608. https://doi.org/10.26848/rbgf.v16.5.p2594-2608</li>
+          <li><strong>Vieira, A. F. S. G.; Frota Filho, A. B. da. (2023).</strong> "Avaliação das técnicas de monitoramento de voçorocas: o exemplo da Região Metropolitana de Manaus-AM, na região amazônica." Revista Brasileira de Geomorfologia, v. 24, Número Especial - Voçorocas. https://doi.org/10.20502/rbg.v24i00.2302</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      Contato: Coordenador (IFSC) · Projeto de Pesquisa e Extensão · Praia dos Ingleses, Florianópolis/SC
+    </footer>
+  </div>
+  <script>
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.tab-panel');
+    const modeToggle = document.getElementById('modeToggle');
+    const rootBody = document.body;
+    let isDark = true;
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById(btn.dataset.tab);
+        if (target) target.classList.add('active');
+      });
+    });
+
+    const applyTheme = () => {
+      rootBody.classList.toggle('dark', isDark);
+      rootBody.classList.toggle('light', !isDark);
+      modeToggle.textContent = isDark ? 'Tema claro' : 'Tema escuro';
+    };
+    modeToggle.addEventListener('click', () => {
+      isDark = !isDark;
+      applyTheme();
+    });
+    applyTheme();
+  </script>
+</body>
+</html>

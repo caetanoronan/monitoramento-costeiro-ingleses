@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa - Área de Estudo | Praia dos Ingleses</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Montserrat", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 2px solid rgba(44, 162, 95, 0.3);
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      color: #99d8c9;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      margin-bottom: 10px;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(44, 162, 95, 0.2);
+      border: 1px solid #2ca25f;
+      color: #99d8c9;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .view-selector {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+    .view-btn {
+      background: rgba(44, 162, 95, 0.15);
+      border: 1px solid rgba(44, 162, 95, 0.5);
+      color: #99d8c9;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .view-btn.active {
+      background: rgba(44, 162, 95, 0.4);
+      box-shadow: 0 0 10px rgba(44, 162, 95, 0.4);
+    }
+    .view-btn:hover {
+      background: rgba(44, 162, 95, 0.3);
+    }
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 20px;
+      flex: 1;
+    }
+    #map {
+      width: 100%;
+      height: 600px;
+      border-radius: 12px;
+      border: 2px solid rgba(44, 162, 95, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+    .sidebar {
+      background: rgba(17, 24, 39, 0.8);
+      border: 1px solid rgba(44, 162, 95, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      overflow-y: auto;
+      max-height: 600px;
+    }
+    .sidebar h3 {
+      color: #99d8c9;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(44, 162, 95, 0.3);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+    }
+    .legend-color {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+    }
+    .color-polygon { background: rgba(44, 162, 95, 0.3); }
+    .color-center { background: #2ca25f; }
+    .color-buffer { background: rgba(34, 211, 238, 0.55); }
+    .color-work { background: #f59e0b; }
+    .info-box {
+      background: rgba(44, 162, 95, 0.1);
+      border-left: 3px solid #99d8c9;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-top: 15px;
+      line-height: 1.6;
+    }
+    .info-box strong { color: #99d8c9; }
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    button {
+      background: rgba(44, 162, 95, 0.2);
+      border: 1px solid #2ca25f;
+      color: #99d8c9;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      flex: 1;
+      min-width: 100px;
+    }
+    button:hover {
+      background: rgba(44, 162, 95, 0.4);
+      box-shadow: 0 0 12px rgba(44, 162, 95, 0.3);
+    }
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      border-top: 1px solid rgba(44, 162, 95, 0.2);
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+    .leaflet-popup-content {
+      color: #0f172a;
+      font-family: "Montserrat", sans-serif;
+    }
+    .leaflet-popup-close-button { color: #666; }
+    @media (max-width: 768px) {
+      .content { grid-template-columns: 1fr; }
+      #map { height: 400px; }
+      h1 { font-size: 1.5rem; }
+      .sidebar { max-height: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Área de Estudo - Praia dos Ingleses</h1>
+      <p class="subtitle">Monitoramento Aerofotogramétrico da Dinâmica Costeira</p>
+      <span class="badge">Florianópolis/SC • IFSC</span>
+    </header>
+
+    <div class="view-selector">
+      <button class="view-btn active" onclick="setMapView('study')">📍 Vista de Estudo</button>
+      <button class="view-btn" onclick="setMapView('contextual')">🏗️ Contexto da Obra</button>
+      <button class="view-btn" onclick="setMapView('satellite')" style="margin-left:auto;">🛰️ Satélite</button>
+    </div>
+
+    <div class="content">
+      <div id="map"></div>
+      
+      <div class="sidebar">
+        <h3 id="legendTitle">Legenda - Estudo</h3>
+        
+        <div id="legendContent">
+          <div class="legend-item">
+            <div class="legend-color color-center"></div>
+            <span>Centro de estudo (marcador)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color color-polygon"></div>
+            <span>Área de estudo (polígono QGIS)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color color-buffer"></div>
+            <span>Zona de influência (dunas QGIS)</span>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <strong>📍 Coordenadas:</strong><br>
+          27.444° S, 48.390° W<br>
+          <strong>📏 Extensão:</strong><br>
+          ~3 km (Rio Capivari - Canto Sul)<br>
+          <strong>📊 Cobertura:</strong><br>
+          Praia dos Ingleses + dunas urbanas<br>
+          <strong>📷 Parâmetros SfM:</strong><br>
+          GSD ≤ 3 cm, 80/70% recobrimento
+        </div>
+
+        <div class="controls">
+          <button onclick="zoomArea()">🎯 Zoom</button>
+          <button onclick="toggleDunes()" id="dunesToggle">🌾 Dunas: ON</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Projeto de Pesquisa e Extensão · IFSC-Florianópolis · Mapa Interativo v2.0
+    </footer>
+  </div>
+
+  <script>
+    const center = [-27.444, -48.390];
+    let currentView = 'study';
+    let satelliteLayer;
+    let currentTileLayer;
+    
+    const map = L.map('map', {
+      minZoom: 12,
+      maxZoom: 19
+    }).setView(center, 14);
+
+    // Camada padrão
+    currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Camada Satélite
+    satelliteLayer = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      { attribution: '© Esri', maxZoom: 19 }
+    );
+
+    // ===== CAMADA 1: ESTUDO =====
+    // Marcador central removido a pedido; apenas polígonos serão exibidos
+
+    // GeoJSON oficiais (exportados do QGIS)
+    const praiaGeojson = {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-48.4030708888946,-27.413774103954196],[-48.4026001922375,-27.41335626351704],[-48.40252174279466,-27.413077702347575],[-48.39671648402389,-27.42526409658788],[-48.39224486578156,-27.43062568403058],[-48.38596891035372,-27.43772764567393],[-48.37694722442619,-27.441905056691123],[-48.36863158348428,-27.44406332375268],[-48.36871003292715,-27.446221548594046],[-48.379928303254424,-27.44336711318444],[-48.390989674695994,-27.436683268210196],[-48.399226866195036,-27.427144163386348],[-48.4045614283087,-27.415445449898332],[-48.4030708888946,-27.413774103954196]]]},"properties":{"id":1}}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}};
+
+    const dunasGeojson = {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-48.375358623208434,-27.443897974140526],[-48.37321106971048,-27.444132944567873],[-48.36966123242163,-27.44320176252889],[-48.36797456940039,-27.446613157446855],[-48.36854332786105,-27.447796677974615],[-48.36938665937165,-27.448440647045185],[-48.36885712563244,-27.449484913222342],[-48.37072029990007,-27.45021589366396],[-48.371092934753605,-27.450529169513114],[-48.37521153050312,-27.459613782049356],[-48.37607447437447,-27.462537406192258],[-48.37717276657434,-27.463024669344843],[-48.378349508217056,-27.462815842543154],[-48.37780036211712,-27.461493263612926],[-48.3790555532027,-27.460588332044864],[-48.3790555532027,-27.45968339304899],[-48.37897710375984,-27.457038144166052],[-48.3778003621171,-27.4532441895991],[-48.37691780588507,-27.451712648024163],[-48.376819744081516,-27.450268106367275],[-48.37689819352436,-27.449014994666026],[-48.37656478339228,-27.445159846488703],[-48.37695703060652,-27.44404591854203],[-48.376015637292355,-27.443750029540652],[-48.375270367585294,-27.443837055799907],[-48.375358623208434,-27.443897974140526]]]},"properties":{"id":3}}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}};
+
+    const areaPolygon = L.geoJSON(praiaGeojson, {
+      style: {
+        color: '#2ca25f',
+        weight: 2,
+        opacity: 0.7,
+        fillColor: '#2ca25f',
+        fillOpacity: 0.18,
+        dashArray: '5, 5'
+      }
+    });
+
+    areaPolygon.bindPopup(
+      '<div style="text-align:center;"><strong>Área de Estudo</strong><br>' +
+      'Extensão: ~3 km (Rio Capivari - Canto Sul)<br>' +
+      'Cobertura: 80/70% recobrimento<br>' +
+      '<strong>GSD ≤ 3 cm</strong><br>' +
+      'Entregas: GeoTIFF, MDS, DoD, shapefiles</div>'
+    );
+
+    const dunesLayer = L.geoJSON(dunasGeojson, {
+      style: {
+        color: '#0891b2',        // contorno ciano forte
+        weight: 1.6,
+        opacity: 0.9,
+        fillColor: '#67e8f9',    // preenchimento ciano claro
+        fillOpacity: 0.38,
+        dashArray: '2, 4'
+      }
+    });
+
+    // Buffer de contexto (ex.: 100 m) ao redor da área da obra
+    const bufferGeojson = turf.buffer(praiaGeojson, 100, { units: 'meters' });
+    const bufferLayer = L.geoJSON(bufferGeojson, {
+      style: {
+        color: '#22d3ee',
+        weight: 1.2,
+        opacity: 0.8,
+        fillColor: '#22d3ee',
+        fillOpacity: 0.12,
+        dashArray: '6, 4'
+      }
+    });
+
+    dunesLayer.bindPopup(
+      '<div><strong>Zona de Influência (Dunas)</strong><br>' +
+      'Contexto urbano e ambiental<br>' +
+      'Dinâmica de maré e erosão</div>'
+    );
+
+    // Limite de extensão para navegação
+    const boundsAll = L.featureGroup([areaPolygon, dunesLayer, bufferLayer]).getBounds();
+    map.setMaxBounds(boundsAll.pad(0.2));
+
+    const studyLayer = L.featureGroup();
+    areaPolygon.addTo(studyLayer);
+
+    // camada dunas controlável
+    let dunesVisible = true;
+    dunesLayer.addTo(map);
+
+    // ===== CAMADA 2: CONTEXTO DA OBRA =====
+    const workArea = L.geoJSON(praiaGeojson, {
+      style: {
+        color: '#f59e0b',
+        weight: 2.5,
+        opacity: 0.8,
+        fillColor: '#f59e0b',
+        fillOpacity: 0.25
+      }
+    });
+
+    workArea.bindPopup(
+      '<div style="text-align:center;"><strong>🏗️ Área Alargada (2023)</strong><br>' +
+      '<strong>Largura antes:</strong> 5-15 metros<br>' +
+      '<strong>Largura após:</strong> 35-40 metros<br>' +
+      '<strong>Volume:</strong> ~3 km³ de areia<br>' +
+      '<strong>Fonte:</strong> Jazida a ~1 km da costa<br>' +
+      '<strong>Investimento:</strong> ~R$ 18 milhões<br>' +
+      '<strong>Status:</strong> Finalizado - Março 2023</div>'
+    );
+
+    const contextualLayer = L.featureGroup();
+    workArea.addTo(contextualLayer);
+
+    studyLayer.addTo(map);
+
+    // Controle de vista
+    function setMapView(view) {
+      currentView = view;
+
+      // Atualizar botões
+      document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Remover camadas anteriores
+      map.removeLayer(studyLayer);
+      if (map.hasLayer(contextualLayer)) map.removeLayer(contextualLayer);
+      if (map.hasLayer(satelliteLayer)) map.removeLayer(satelliteLayer);
+      if (map.hasLayer(dunesLayer)) map.removeLayer(dunesLayer);
+      if (map.hasLayer(bufferLayer)) map.removeLayer(bufferLayer);
+
+      if (view === 'study') {
+        studyLayer.addTo(map);
+        if (dunesVisible) dunesLayer.addTo(map);
+        document.getElementById('legendTitle').textContent = 'Legenda - Estudo';
+        document.getElementById('legendContent').innerHTML = `
+          <div class="legend-item">
+            <div class="legend-color color-polygon"></div>
+            <span>Área de estudo (polígono QGIS)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color color-buffer"></div>
+            <span>Zona de influência (dunas QGIS)</span>
+          </div>
+        `;
+        zoomArea();
+      } else if (view === 'contextual') {
+        contextualLayer.addTo(map);
+        bufferLayer.addTo(map);
+        if (dunesVisible) dunesLayer.addTo(map);
+        document.getElementById('legendTitle').textContent = 'Legenda - Obra (2023)';
+        document.getElementById('legendContent').innerHTML = `
+          <div class="legend-item">
+            <div class="legend-color color-work"></div>
+            <span>Área alargada</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color color-buffer"></div>
+            <span>Buffer 100 m</span>
+          </div>
+        `;
+        zoomArea();
+      } else if (view === 'satellite') {
+        satelliteLayer.addTo(map);
+        studyLayer.addTo(map);
+        if (dunesVisible) dunesLayer.addTo(map);
+        document.getElementById('legendTitle').textContent = 'Legenda - Satélite';
+        document.getElementById('legendContent').innerHTML = `
+          <div class="legend-item">
+            <span><strong>Visualização:</strong> Imagem Esri</span>
+          </div>
+          <p style="font-size:0.8rem;color:#94a3b8;margin-top:10px;">
+            Sobreposição da área de estudo com imageamento de satélite para contexto geográfico.
+          </p>
+        `;
+        zoomArea();
+      }
+    }
+
+        function zoomArea() {
+          const layers = [areaPolygon];
+          if (map.hasLayer(dunesLayer) && dunesVisible) layers.push(dunesLayer);
+          if (map.hasLayer(bufferLayer)) layers.push(bufferLayer);
+          const fg = L.featureGroup(layers);
+          const bounds = fg.getBounds();
+          map.fitBounds(bounds.pad(0.05));
+        }
+        setTimeout(() => zoomArea(), 500);
+
+        function toggleDunes() {
+          dunesVisible = !dunesVisible;
+          if (map.hasLayer(dunesLayer)) map.removeLayer(dunesLayer);
+          if (dunesVisible) dunesLayer.addTo(map);
+          document.getElementById('dunesToggle').textContent = dunesVisible ? '🌾 Dunas: ON' : '🌾 Dunas: OFF';
+        }
+
+    // Escala
+    L.control.scale({ imperial: false, metric: true }).addTo(map);
+  </script>
+</body>
+</html>

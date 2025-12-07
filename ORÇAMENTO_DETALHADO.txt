@@ -1,0 +1,18 @@
+"ORÇAMENTO_DETALHADO"
+Cód.	Descrição do Item / Rubrica Orçamentária	Unidade	Quant.	Custo Unitário (R$)	Custo Total (R$)	Justificativa / Especificação
+50000	PESSOAL E ENCARGOS SOCIAIS				38.400,00	
+51001	Bolsa de Pesquisa - Nível Superior (Mestrando)	Mês	12	2.000,00	24.000,00	Para o pesquisador responsável pelo processamento avançado e análise.
+51002	Bolsa de Extensão - Nível Técnico (Graduando I)	Mês	12	600,00	7.200,00	Apoio em campo e processamento inicial.
+51003	Bolsa de Extensão - Nível Técnico (Graduando II)	Mês	12	600,00	7.200,00	Apoio em SIG e geração de produtos cartográficos.
+52000	MATERIAL PERMANENTE E DE CONSUMO				3.000,00	
+52001	Baterias Extras para Drone DJI P4RTK	Unidade	2	800,00	1.600,00	Necessário para garantir a duração das campanhas de voo.
+52002	Cartões de Memória SD 128GB U3	Unidade	3	150,00	450,00	Para armazenamento seguro das imagens em campo.
+52003	Confeção de Alvos (GCPs) - Material Durável	Lote	1	400,00	400,00	20 alvos impressos em lona plástica com suporte.
+52004	Material de Expediente e Gráfico	Lote	1	300,00	300,00	Toner, papel, pastas, pendrives, etc.
+52005	HD Externo para Backup (2TB)	Unidade	2	250,00	500,00	Armazenamento seguro dos dados brutos e processados.
+53000	SERVIÇOS DE TERCEIROS				1.200,00	
+53001	Transporte e Locomoção para Campo	Saída	6	200,00	1.200,00	Combustível e deslocamento da equipe para a Praia dos Ingleses.
+54000	RESERVA TÉCNICA				4.260,00	
+54001	Reserva para Contingências	Percentual	10%	-	4.260,00	10% do subtotal (R$ 42.600,00) para cobrir imprevistos.
+SUBTOTAL (Itens 50000 a 53000)				42.600,00	
+TOTAL GERAL DO PROJETO				46.860,00	
