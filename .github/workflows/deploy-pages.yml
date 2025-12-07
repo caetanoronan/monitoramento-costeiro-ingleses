@@ -27,7 +27,8 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir -p public
-          cp apresentacao.html public/index.html
+          cp index.html public/index.html
+          cp apresentacao.html public/apresentacao.html
           cp mapa_estudo.html public/mapa_estudo.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
