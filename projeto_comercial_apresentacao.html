@@ -182,7 +182,7 @@
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <span class="pill">PROPOSTA COMERCIAL</span>
         <span class="pill">12 MESES</span>
-        <span class="pill">R$ 4.070.990</span>
+        <span class="pill">R$ 4.052.703</span>
         <button id="modeToggle" class="tab-btn">Alternar tema</button>
       </div>
     </header>
@@ -238,7 +238,7 @@
         <div class="stat-card">
           <div class="stat-label">Investimento</div>
           <div class="stat-value">R$</div>
-          <div class="stat-label">4.070.990</div>
+          <div class="stat-label">4.052.703</div>
         </div>
       </div>
 
@@ -255,7 +255,7 @@
         </div>
         <div class="card">
           <strong>✓ Tecnologia consolidada</strong>
-          <p>DJI Matrice 350 RTK, Trimble GNSS, Pix4D, ArcGIS Pro, processamento em GPU.</p>
+          <p>DJI Matrice 350 RTK com antena RTK H30T, Emlid Reach RS2+ complementar, Pix4D, ArcGIS Pro, processamento em GPU NVIDIA RTX 6000 Ada.</p>
         </div>
         <div class="card">
           <strong>✓ Precisão centimétrica</strong>
@@ -520,10 +520,17 @@
             <td>Proprietário</td>
           </tr>
           <tr class="row-stage">
-            <td>GNSS Geodésico</td>
-            <td>Trimble R12i com TSC7</td>
+            <td>GNSS RTK DJI</td>
+            <td>DJI Antena RTK H30T + Estação Base Móvel</td>
             <td>2</td>
-            <td class="valor">R$ 140.000</td>
+            <td class="valor">R$ 95.000</td>
+            <td>Proprietário</td>
+          </tr>
+          <tr class="row-stage">
+            <td>GNSS Complementar</td>
+            <td>Emlid Reach RS2+ (Estação GNSS Independente)</td>
+            <td>1</td>
+            <td class="valor">R$ 25.000</td>
             <td>Proprietário</td>
           </tr>
           <tr class="row-campo">
@@ -563,7 +570,7 @@
           </tr>
           <tr class="row-fin">
             <td colspan="3"><strong>Total Investido</strong></td>
-            <td class="valor"><strong>R$ 1.263.000</strong></td>
+            <td class="valor"><strong>R$ 1.243.000</strong></td>
             <td></td>
           </tr>
         </table>
@@ -1204,31 +1211,31 @@ Relatórios automáticos + Dashboard web
           </tr>
           <tr class="row-stage">
             <td>Custos Diretos (A-F)</td>
-            <td class="valor">2.643.500</td>
+            <td class="valor">2.631.625</td>
             <td>64,9%</td>
             <td>Mão de obra, equipamentos, software, logística, infraestrutura, administrativo</td>
           </tr>
           <tr class="row-div">
             <td>Contingência Técnica (10%)</td>
-            <td class="valor">264.350</td>
+            <td class="valor">263.163</td>
             <td>6,5%</td>
             <td>Imprevistos técnicos e operacionais</td>
           </tr>
           <tr class="row-proc">
             <td>Subtotal Operacional</td>
-            <td class="valor">2.907.850</td>
+            <td class="valor">2.894.788</td>
             <td>71,4%</td>
             <td>Custos diretos + contingência</td>
           </tr>
           <tr class="row-stage">
             <td>Margem Operacional / Lucro (40%)</td>
-            <td class="valor">1.163.140</td>
+            <td class="valor">1.157.915</td>
             <td>28,6%</td>
             <td>Cobertura despesas indiretas e resultado</td>
           </tr>
           <tr class="row-fin" style="border-top:2px solid var(--accent-3);">
             <td><strong>TOTAL DO PROJETO</strong></td>
-            <td class="valor"><strong>4.070.990</strong></td>
+            <td class="valor"><strong>4.052.703</strong></td>
             <td><strong>100%</strong></td>
             <td></td>
           </tr>
@@ -1239,20 +1246,20 @@ Relatórios automáticos + Dashboard web
       <div class="grid">
         <div class="card">
           <strong>À vista</strong>
-          <p class="highlight" style="font-size:1.3rem;">R$ 3.663.891</p>
+          <p class="highlight" style="font-size:1.3rem;">R$ 3.647.433</p>
           <p class="muted">(10% desconto sobre o total)</p>
         </div>
         <div class="card">
           <strong>Parcelado em 12x</strong>
-          <p class="highlight" style="font-size:1.3rem;">R$ 339.249/mês</p>
+          <p class="highlight" style="font-size:1.3rem;">R$ 337.725/mês</p>
           <p class="muted">(sem juros)</p>
         </div>
         <div class="card">
           <strong>Por fases</strong>
           <ul style="margin-top:8px;">
-            <li>Fase 1 (30%): R$ 1.221.297</li>
-            <li>Fase 2 (40%): R$ 1.628.396</li>
-            <li>Fase 3 (30%): R$ 1.221.297</li>
+            <li>Fase 1 (30%): R$ 1.215.811</li>
+            <li>Fase 2 (40%): R$ 1.621.082</li>
+            <li>Fase 3 (30%): R$ 1.215.811</li>
           </ul>
         </div>
       </div>
@@ -1419,13 +1426,23 @@ Relatórios automáticos + Dashboard web
           </tr>
           <tr>
             <td>02004</td>
-            <td>GNSS Geodésico Trimble R12i - Depreciação</td>
+            <td>DJI Antena RTK H30T + Estação Base - Depreciação</td>
             <td>2</td>
             <td>Un.</td>
-            <td>14.000</td>
-            <td>Anual (10%)</td>
-            <td class="valor">28.000</td>
-            <td>R$ 140.000 × 2 × 10%</td>
+            <td>7.125</td>
+            <td>Anual (15%)</td>
+            <td class="valor">14.250</td>
+            <td>R$ 95.000 × 2 × 7,5% (equipamento eletrônico)</td>
+          </tr>
+          <tr>
+            <td>02004a</td>
+            <td>Emlid Reach RS2+ - Depreciação</td>
+            <td>1</td>
+            <td>Un.</td>
+            <td>1.875</td>
+            <td>Anual (15%)</td>
+            <td class="valor">1.875</td>
+            <td>R$ 25.000 × 7,5% (equipamento eletrônico)</td>
           </tr>
           <tr>
             <td>02005</td>
@@ -1469,7 +1486,7 @@ Relatórios automáticos + Dashboard web
           </tr>
           <tr class="row-fin">
             <td colspan="6"><strong>TOTAL EQUIPAMENTOS</strong></td>
-            <td class="valor"><strong>394.300</strong></td>
+            <td class="valor"><strong>374.300</strong></td>
             <td></td>
           </tr>
           <tr class="row-stage">
@@ -1716,27 +1733,27 @@ Relatórios automáticos + Dashboard web
           </tr>
           <tr class="row-div">
             <td colspan="6"><strong>SUBTOTAL CUSTOS DIRETOS (A+B+C+D+E+F)</strong></td>
-            <td class="valor"><strong>2.643.500</strong></td>
+            <td class="valor"><strong>2.631.625</strong></td>
             <td></td>
           </tr>
           <tr class="row-div">
             <td colspan="6"><strong>Contingência Técnica (10% dos custos)</strong></td>
-            <td class="valor"><strong>264.350</strong></td>
+            <td class="valor"><strong>263.163</strong></td>
             <td>Imprevistos, atrasos, emergências</td>
           </tr>
           <tr class="row-fin">
             <td colspan="6"><strong>TOTAL CUSTOS OPERACIONAIS</strong></td>
-            <td class="valor"><strong>2.907.850</strong></td>
+            <td class="valor"><strong>2.894.788</strong></td>
             <td></td>
           </tr>
           <tr style="background:rgba(44,162,95,0.15);">
             <td colspan="6"><strong>MARGEM OPERACIONAL / LUCRO (40%)</strong></td>
-            <td class="valor"><strong>1.163.140</strong></td>
+            <td class="valor"><strong>1.157.915</strong></td>
             <td>Cobre despesas indiretas</td>
           </tr>
           <tr class="row-fin" style="border-top:2px solid var(--accent-3);">
             <td colspan="6"><strong>PREÇO FINAL DO PROJETO (Proposta Comercial)</strong></td>
-            <td class="valor" style="font-size:1.2rem;"><strong>R$ 4.070.990</strong></td>
+            <td class="valor" style="font-size:1.2rem;"><strong>R$ 4.052.703</strong></td>
             <td><strong>Valor total com lucro</strong></td>
           </tr>
         </table>
@@ -1746,7 +1763,7 @@ Relatórios automáticos + Dashboard web
       <div class="grid">
         <div class="card">
           <strong>Valor Único da Proposta</strong>
-          <p>O resumo e o detalhado estão agora alinhados no mesmo valor: <strong>R$ 4.070.990</strong> (12 meses).</p>
+          <p>O resumo e o detalhado estão agora alinhados no mesmo valor: <strong>R$ 4.052.703</strong> (12 meses).</p>
         </div>
         <div class="card">
           <strong>Composição</strong>
@@ -1759,7 +1776,7 @@ Relatórios automáticos + Dashboard web
         </div>
         <div class="card">
           <strong>Observação</strong>
-          <p>As formas de pagamento utilizam o mesmo valor de referência de R$ 4.070.990 para evitar divergências.</p>
+          <p>As formas de pagamento utilizam o mesmo valor de referência de R$ 4.052.703 para evitar divergências.</p>
         </div>
       </div>
     </section>
@@ -2034,8 +2051,97 @@ Relatórios automáticos + Dashboard web
 
     <!-- REFERÊNCIAS -->
     <section id="referencias" class="tab-panel">
-      <h2>Referências</h2>
-      <p>Materiais públicos e complementares relacionados ao projeto.</p>
+      <h2>Referências e Fundamentação Teórica</h2>
+      <p>Compilação de metodologias e estudos de caso sobre monitoramento costeiro com drones, fotogrametria e análise espacial em praias e dunas.</p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Base teórica e metodológica</strong>
+          <p>Estudos recentes no Brasil consolidam o uso de VANTs em análises costeiras. Simões et al. (2019) apresentam fluxo completo com DJI Phantom, recobrimento 80/70%, processamento de mosaicos, MDS, perfis de praia e linha de costa. A série temporal permite correlacionar eventos meteorológicos com mudanças morfológicas e erosão.</p>
+          <p><strong>Referência:</strong> Simões, R. S.; Oliveira, U. R.; Espinoza, J. M. A.; Albuquerque, M. G.; Alves, D. C. L. (2019). "Uso de drone de pequeno porte para análise costeira: enfoque metodológico." Revista Brasileira de Geografia Física, v. 12, n. 2, p. 622-640. DOI: <a href="https://doi.org/10.26848/rbgf.v12.2.p622-640" target="_blank" style="color:var(--accent-3);text-decoration:none;">https://doi.org/10.26848/rbgf.v12.2.p622-640</a></p>
+        </div>
+        <div class="card">
+          <strong>Checklist de campo (adaptado)</strong>
+          <ul style="margin-top:6px;">
+            <li>Verificação de bateria e calibração do drone antes do voo.</li>
+            <li>Localização de GCPs e verificação de marcações.</li>
+            <li>Configuração de câmera (ISO, shutter, white balance manual).</li>
+            <li>Teste de comunicação com estação base (se RTK).</li>
+            <li>Checagem de clima: vento, nuvens, visibilidade.</li>
+            <li>Armazenamento das imagens em mídia única + backup após cada campanha.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Aplicações em praias e dunas</strong>
+          <ul style="margin-top:6px;">
+            <li>Mapeamento multitemporal: análise mensal/sazonal do limite praia-duna.</li>
+            <li>Resposta a eventos: ciclones, temporais e erosão costeira.</li>
+            <li>Gestão urbana: apoio a defesa civil e planejamento.</li>
+            <li>Indicadores: volume sedimentar, taxa de recuo/avanço, correlação com maré/ondas.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Processamento e análise (fluxo consolidado)</strong>
+          <ul style="margin-top:6px;">
+            <li>Alinhamento de fotos e georreferenciamento com GCPs no Metashape.</li>
+            <li>Geração de nuvem densa, MDS e ortomosaico em alta resolução.</li>
+            <li>Digitalização da linha de costa e limite dunar no QGIS.</li>
+            <li>Cálculo de deslocamento e variação de volume entre campanhas.</li>
+            <li>Integração com dados de maré, meteorologia e análise temporal.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Vantagens e desafios documentados</strong>
+          <ul style="margin-top:6px;">
+            <li><strong>Vantagens:</strong> Resolução cm/pixel, flexibilidade operacional, baixo custo relativo, aquisição rápida, séries temporais densas, integração com SIG.</li>
+            <li><strong>Desafios:</strong> Precisão GNSS, validação de GCPs, processamento intensivo, licenças (DECEA), clima e consistência de procedimentos.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Desafios em contextos complexos (Alves, 2023)</strong>
+          <p>Aplicação de drones em áreas amazônicas (32 comunidades). Equipamentos de baixo custo reduzem burocracia, mas há desafios de logística, ambiente homogêneo, sombras e processamento.</p>
+          <ul style="margin-top:6px;">
+            <li>Logística: infraestrutura limitada, transporte e manutenção.</li>
+            <li>Ambiente: sobreposição de objetos homogêneos, umidade.</li>
+            <li>Processamento: classificação difícil; exige hardware/software robusto e reclassificação manual.</li>
+            <li>Extensão: mapeamento participativo e regularização fundiária.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Oportunidades para o projeto (síntese)</h3>
+      <ul>
+        <li>Integrar metodologia de Simões et al. (2019) com aprendizados de contextos complexos (Alves, 2023).</li>
+        <li>Aplicar checklist consolidado e fluxo de processamento em ambiente costeiro com maior definição de linha de costa.</li>
+        <li>Correlacionar séries temporais com marés e eventos meteorológicos.</li>
+        <li>Capacitar alunos em geotecnologia e apoiar gestão municipal.</li>
+      </ul>
+
+      <h3>Grupos de pesquisa de referência</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>FURG – Rio Grande/RS</strong>
+          <p>Laboratório de Geomorfologia e Recursos Hídricos. Foco: erosão costeira, dinâmica de praias e dunas. Pesquisadores: U.R. Oliveira, R.S. Simões, M.G. Albuquerque.</p>
+        </div>
+        <div class="card">
+          <strong>IFRS Campus Rio Grande – GEOMA</strong>
+          <p>Geotecnologias e Meio Ambiente. Sensoriamento remoto, drones, processamento de imagens. Pesquisador: J.M.A. Espinoza.</p>
+        </div>
+        <div class="card">
+          <strong>UNICAMP – NEPAM</strong>
+          <p>Drones em ambientes complexos, comunidades tradicionais, geoprocessamento. Pesquisador: J.D.G. Alves.</p>
+        </div>
+      </div>
+
+      <h3>Referências completas</h3>
+      <div class="card" style="font-size:0.95rem;">
+        <ul style="margin:0 0 0 18px;">
+          <li>Simões, R. S.; Oliveira, U. R.; Espinoza, J. M. A.; Albuquerque, M. G.; Alves, D. C. L. (2019). "Uso de drone de pequeno porte para análise costeira: enfoque metodológico." Revista Brasileira de Geografia Física, v. 12, n. 2, p. 622-640. <a href="https://doi.org/10.26848/rbgf.v12.2.p622-640" target="_blank" style="color:var(--accent-3);text-decoration:none;">https://doi.org/10.26848/rbgf.v12.2.p622-640</a></li>
+          <li>Alves, J. D. G. (2023). "Possibilidades e desafios no uso de drone para mapeamento de comunidades tradicionais na Amazônia." Revista Brasileira de Geografia Física, v. 16, n. 5, p. 2594-2608. <a href="https://doi.org/10.26848/rbgf.v16.5.p2594-2608" target="_blank" style="color:var(--accent-3);text-decoration:none;">https://doi.org/10.26848/rbgf.v16.5.p2594-2608</a></li>
+          <li>Vieira, A. F. S. G.; Frota Filho, A. B. da. (2023). "Avaliação das técnicas de monitoramento de voçorocas: o exemplo da Região Metropolitana de Manaus-AM, na região amazônica." Revista Brasileira de Geomorfologia, v. 24, Número Especial - Voçorocas. <a href="https://doi.org/10.20502/rbg.v24i00.2302" target="_blank" style="color:var(--accent-3);text-decoration:none;">https://doi.org/10.20502/rbg.v24i00.2302</a></li>
+        </ul>
+      </div>
+
       <div class="card" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
         <strong>Apresentação online</strong>
         <p class="muted" style="margin:0;">Versão publicada para consulta rápida.</p>
