@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Monitoramento Costeiro Ingleses</title>
+  <style>
+    :root {
+      --accent-1: #e5f5f9;
+      --accent-2: #99d8c9;
+      --accent-3: #2ca25f;
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --stroke: #1f2937;
+      --accent: var(--accent-2);
+    }
+    .light {
+      --bg: #f5fbfc;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #4b5563;
+      --stroke: #d7e5e8;
+      --accent: var(--accent-3);
+      color: var(--text);
+      background: radial-gradient(circle at 20% 20%, rgba(44,162,95,0.08), transparent 30%),
+                  radial-gradient(circle at 80% 0%, rgba(153,216,201,0.18), transparent 25%),
+                  var(--bg);
+    }
+    .dark {
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --stroke: #1f2937;
+      --accent: var(--accent-2);
+      background: radial-gradient(circle at 20% 20%, rgba(44,162,95,0.08), transparent 30%),
+                  radial-gradient(circle at 80% 0%, rgba(153,216,201,0.15), transparent 25%),
+                  var(--bg);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Montserrat", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 32px 18px 48px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-weight: 700;
+      font-size: 2.5rem;
+      letter-spacing: -0.5px;
+      color: var(--accent-3);
+    }
+    h2 {
+      margin: 32px 0 16px;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-3);
+      text-align: center;
+    }
+    h3 {
+      margin: 16px 0 8px;
+      font-size: 1.1rem;
+      color: var(--accent-2);
+    }
+    p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .grid {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      margin-top: 24px;
+    }
+    .card {
+      background: var(--panel);
+      border: 2px solid var(--stroke);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+      border-color: var(--accent-3);
+    }
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 12px;
+      color: var(--accent-3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-icon {
+      font-size: 2rem;
+    }
+    .card-description {
+      color: var(--text);
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--accent-3);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.2s;
+      text-align: center;
+    }
+    .btn:hover {
+      background: #238c4d;
+      transform: scale(1.05);
+    }
+    .btn-secondary {
+      background: var(--accent-2);
+      color: var(--bg);
+    }
+    .btn-secondary:hover {
+      background: #7dc4b8;
+    }
+    .toggle-btn {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: var(--panel);
+      border: 2px solid var(--stroke);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      z-index: 1000;
+    }
+    .toggle-btn:hover {
+      background: var(--accent-3);
+      color: white;
+      border-color: var(--accent-3);
+    }
+    ul {
+      margin: 8px 0 0 20px;
+      padding: 0;
+      color: var(--text);
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 24px;
+    }
+    .comparison-table th,
+    .comparison-table td {
+      border: 1px solid var(--stroke);
+      padding: 16px;
+      text-align: left;
+    }
+    .comparison-table th {
+      background: var(--accent-3);
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .comparison-table td {
+      color: var(--text);
+    }
+    .comparison-table tr:nth-child(even) {
+      background: rgba(153, 216, 201, 0.05);
+    }
+    .footer {
+      text-align: center;
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 2px solid var(--stroke);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--accent-3);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-left: 8px;
+    }
+    .highlight {
+      background: linear-gradient(120deg, var(--accent-1) 0%, var(--accent-2) 100%);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--bg);
+      font-weight: 600;
+    }
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .grid { grid-template-columns: 1fr; }
+      .toggle-btn { top: 12px; right: 12px; padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body class="dark">
+  <button class="toggle-btn" id="modeToggle">☀️ Alternar tema</button>
+
+  <div class="wrap">
+    <header>
+      <h1>📊 Dashboard - Monitoramento Costeiro</h1>
+      <p class="subtitle">Praia dos Ingleses, Florianópolis/SC</p>
+      <p style="max-width:800px;margin:0 auto;">Central de acesso às apresentações do projeto de monitoramento aerofotogramétrico da dinâmica costeira. Escolha entre a <span class="highlight">apresentação técnica</span> ou a <span class="highlight">proposta comercial</span> conforme sua necessidade.</p>
+    </header>
+
+    <h2>🎯 Escolha sua apresentação</h2>
+
+    <div class="grid">
+      <!-- Apresentação Técnica -->
+      <div class="card">
+        <div class="card-title">
+          <span class="card-icon">🔬</span>
+          Apresentação Técnica
+          <span class="badge">Pública</span>
+        </div>
+        <div class="card-description">
+          <p><strong>Objetivo:</strong> Documentação científica e técnica do projeto de monitoramento costeiro.</p>
+          <h3>Conteúdo:</h3>
+          <ul>
+            <li>Contexto geográfico e ambiental</li>
+            <li>Metodologia de aquisição e processamento</li>
+            <li>Análise de resultados e séries temporais</li>
+            <li>Mapas interativos e visualizações 3D</li>
+            <li>Referências bibliográficas e acadêmicas</li>
+          </ul>
+          <h3>Público-alvo:</h3>
+          <ul>
+            <li>Pesquisadores e acadêmicos</li>
+            <li>Estudantes de geociências</li>
+            <li>Gestores públicos</li>
+            <li>Comunidade em geral</li>
+          </ul>
+        </div>
+        <a href="https://caetanoronan.github.io/monitoramento-costeiro-ingleses/apresentacao.html" target="_blank" class="btn">📖 Acessar Apresentação Técnica</a>
+      </div>
+
+      <!-- Proposta Comercial -->
+      <div class="card">
+        <div class="card-title">
+          <span class="card-icon">💼</span>
+          Proposta Comercial
+          <span class="badge" style="background:#ff6b6b;">Comercial</span>
+        </div>
+        <div class="card-description">
+          <p><strong>Objetivo:</strong> Apresentação completa da solução empresarial para contratação de serviços.</p>
+          <h3>Conteúdo:</h3>
+          <ul>
+            <li>Resumo executivo e diferenciais da empresa</li>
+            <li>Escopo detalhado de serviços</li>
+            <li>Infraestrutura, equipe e metodologia</li>
+            <li>Cronograma de 12 meses e entregas</li>
+            <li>Orçamento detalhado (R$ 4.070.990)</li>
+            <li>Análise de riscos e mitigações</li>
+            <li>Formas de pagamento e condições</li>
+          </ul>
+          <h3>Público-alvo:</h3>
+          <ul>
+            <li>Clientes potenciais e decisores</li>
+            <li>Órgãos públicos interessados</li>
+            <li>Empresas parceiras</li>
+            <li>Investidores</li>
+          </ul>
+        </div>
+        <a href="https://caetanoronan.github.io/monitoramento-costeiro-ingleses/projeto_comercial_apresentacao.html" target="_blank" class="btn btn-secondary">💰 Acessar Proposta Comercial</a>
+      </div>
+    </div>
+
+    <h2>📋 Comparação das Apresentações</h2>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Característica</th>
+          <th>Apresentação Técnica</th>
+          <th>Proposta Comercial</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Foco Principal</strong></td>
+          <td>Metodologia científica e resultados</td>
+          <td>Solução empresarial e investimento</td>
+        </tr>
+        <tr>
+          <td><strong>Estrutura</strong></td>
+          <td>5 seções técnicas + mapa + glossário</td>
+          <td>12 seções completas (executivo, escopo, orçamento, riscos, etc.)</td>
+        </tr>
+        <tr>
+          <td><strong>Nível de Detalhe</strong></td>
+          <td>Alto em metodologia e análise</td>
+          <td>Alto em custos, cronograma e entregáveis</td>
+        </tr>
+        <tr>
+          <td><strong>Visualizações</strong></td>
+          <td>Mapas interativos, gráficos, perfis de praia</td>
+          <td>Tabelas financeiras, cronogramas, stat cards</td>
+        </tr>
+        <tr>
+          <td><strong>Orçamento</strong></td>
+          <td>Não incluído</td>
+          <td>Detalhado: R$ 4.070.990 (66 itens)</td>
+        </tr>
+        <tr>
+          <td><strong>Cronograma</strong></td>
+          <td>Visão geral das etapas</td>
+          <td>Detalhado: 28 tarefas em 8 etapas</td>
+        </tr>
+        <tr>
+          <td><strong>Equipe</strong></td>
+          <td>Menção básica</td>
+          <td>12 profissionais com salários e funções</td>
+        </tr>
+        <tr>
+          <td><strong>Referências</strong></td>
+          <td>Acadêmicas e bibliográficas</td>
+          <td>Acadêmicas + casos de uso + diferenciais</td>
+        </tr>
+        <tr>
+          <td><strong>Linguagem</strong></td>
+          <td>Técnica e científica</td>
+          <td>Comercial e persuasiva</td>
+        </tr>
+        <tr>
+          <td><strong>Duração de Leitura</strong></td>
+          <td>~15-20 minutos</td>
+          <td>~30-40 minutos</td>
+        </tr>
+        <tr>
+          <td><strong>Ideal para</strong></td>
+          <td>Compreender a ciência e metodologia</td>
+          <td>Avaliar viabilidade e contratar serviço</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>ℹ️ Informações Adicionais</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>🌊 Sobre o Projeto</h3>
+        <p>Monitoramento aerofotogramétrico de alta precisão da Praia dos Ingleses para avaliar o alargamento artificial e monitorar o avanço das dunas urbanas. Utiliza drones (DJI Matrice 350 RTK), GNSS de precisão e processamento fotogramétrico avançado.</p>
+      </div>
+      <div class="card">
+        <h3>🏢 Sobre a Empresa</h3>
+        <p><strong>OlokunCoastal</strong> - Empresa especializada em geotecnologias costeiras com infraestrutura própria, equipe dedicada e portfólio de 12 projetos similares executados em Balneário Camboriú, Jaguaruna e Torres.</p>
+      </div>
+      <div class="card">
+        <h3>📍 Localização do Estudo</h3>
+        <p>Praia dos Ingleses, litoral norte de Florianópolis/SC. Trecho de 3,2 km de orla com zona urbana de alta densidade e infraestrutura turística concentrada. Área total de ~0,5 km².</p>
+      </div>
+      <div class="card">
+        <h3>📞 Contato</h3>
+        <p><strong>OlokunCoastal</strong><br>
+        📧 projetos@olokuncoastal.com.br<br>
+        🌐 www.olokuncoastal.com.br<br>
+        📞 (48) 3224-7000<br>
+        📍 Florianópolis/SC</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p><strong>Dashboard desenvolvido por OlokunCoastal</strong></p>
+      <p>Última atualização: Dezembro 2025</p>
+      <p>Proposta válida por 30 dias · Florianópolis/SC</p>
+    </div>
+  </div>
+
+  <script>
+    const toggle = document.getElementById('modeToggle');
+    const body = document.body;
+
+    // Carregar preferência salva
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    body.className = savedTheme;
+    updateToggleButton();
+
+    toggle.addEventListener('click', () => {
+      if (body.classList.contains('dark')) {
+        body.classList.remove('dark');
+        body.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        body.classList.remove('light');
+        body.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+      updateToggleButton();
+    });
+
+    function updateToggleButton() {
+      if (body.classList.contains('dark')) {
+        toggle.textContent = '☀️ Alternar tema';
+      } else {
+        toggle.textContent = '🌙 Alternar tema';
+      }
+    }
+  </script>
+</body>
+</html>
