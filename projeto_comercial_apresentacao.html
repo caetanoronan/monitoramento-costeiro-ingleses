@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projeto Comercial - Monitoramento Aerofotogramétrico da Dinâmica Costeira</title>
+  <style>
+    :root {
+      /* BuGn (3 cores): #e5f5f9, #99d8c9, #2ca25f */
+      --accent-1: #e5f5f9;
+      --accent-2: #99d8c9;
+      --accent-3: #2ca25f;
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --stroke: #1f2937;
+      --accent: var(--accent-2);
+    }
+    .light {
+      --bg: #f5fbfc;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #4b5563;
+      --stroke: #d7e5e8;
+      --accent: var(--accent-3);
+      color: var(--text);
+      background: radial-gradient(circle at 20% 20%, rgba(44,162,95,0.08), transparent 30%),
+                  radial-gradient(circle at 80% 0%, rgba(153,216,201,0.18), transparent 25%),
+                  var(--bg);
+    }
+    .dark {
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --stroke: #1f2937;
+      --accent: var(--accent-2);
+      background: radial-gradient(circle at 20% 20%, rgba(44,162,95,0.08), transparent 30%),
+                  radial-gradient(circle at 80% 0%, rgba(153,216,201,0.15), transparent 25%),
+                  var(--bg);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Montserrat", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 32px 18px 48px;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: baseline;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      font-size: 2.2rem;
+    }
+    h2 {
+      margin: 24px 0 8px;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-3);
+    }
+    h3 {
+      margin: 16px 0 6px;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+    }
+    p { margin: 0 0 10px; color: var(--muted); }
+    .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+    }
+    ul { margin: 6px 0 0 18px; padding: 0; color: var(--text); }
+    li { margin-bottom: 6px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid var(--stroke);
+      padding: 8px 10px;
+      text-align: left;
+    }
+    th { background: #0b1220; color: var(--accent); font-weight: 600; }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(44,162,95,0.12);
+      color: var(--text);
+      font-size: 0.9rem;
+      margin-right: 6px;
+    }
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-3);
+      margin: 8px 0;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .timeline td { text-align: center; font-weight: 600; }
+    .muted { color: var(--muted); }
+    footer { margin-top: 28px; color: var(--muted); font-size: 0.9rem; }
+    .row-stage { background: rgba(153,216,201,0.08); }
+    .row-campo { background: rgba(44,162,95,0.1); }
+    .row-proc { background: rgba(44,162,95,0.07); }
+    .row-div { background: rgba(153,216,201,0.05); }
+    .row-fin { background: rgba(44,162,95,0.08); }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 14px;
+    }
+    .tab-btn {
+      border: 1px solid var(--stroke);
+      background: #0b1220;
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .tab-btn.active {
+      background: rgba(44,162,95,0.18);
+      color: var(--accent-3);
+      border-color: rgba(44,162,95,0.35);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .highlight {
+      color: var(--accent-3);
+      font-weight: 600;
+    }
+    .valor {
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:300px;">
+        <h1>Monitoramento Aerofotogramétrico</h1>
+        <p style="margin:4px 0 0;font-size:1.1rem;">GeoCoastal Solutions Ltda.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <span class="pill">PROPOSTA COMERCIAL</span>
+        <span class="pill">12 MESES</span>
+        <span class="pill">R$ 1.619.820</span>
+        <button id="modeToggle" class="tab-btn">Alternar tema</button>
+      </div>
+    </header>
+    <p><strong>Dinâmica Costeira - Alargamento Artificial e Avanço das Dunas Urbanas</strong><br>Praia dos Ingleses, Florianópolis/SC</p>
+    <p style="color:var(--muted);font-size:0.95rem;">Proposta técnica e comercial para execução de monitoramento aerofotogramétrico de alta precisão com infraestrutura própria, equipe dedicada e tecnologia de ponta. Precisão centimétrica, processamento em nuvem e produtos geoespaciais prontos para decisão.</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="executivo">Resumo Executivo</button>
+      <button class="tab-btn" data-tab="contexto">Contexto e Oportunidade</button>
+      <button class="tab-btn" data-tab="escopo">Escopo de Serviços</button>
+      <button class="tab-btn" data-tab="infraestrutura">Infraestrutura</button>
+      <button class="tab-btn" data-tab="metodologia">Metodologia</button>
+      <button class="tab-btn" data-tab="cronograma">Cronograma</button>
+      <button class="tab-btn" data-tab="orcamento">Orçamento</button>
+      <button class="tab-btn" data-tab="riscos">Riscos</button>
+      <button class="tab-btn" data-tab="diferenciais">Diferenciais</button>
+      <button class="tab-btn" data-tab="mapa">Mapa de Estudo</button>
+      <button class="tab-btn" data-tab="glossario">Glossário</button>
+    </div>
+
+    <!-- RESUMO EXECUTIVO -->
+    <section id="executivo" class="tab-panel active">
+      <h2>Resumo Executivo</h2>
+      <p>A GeoCoastal Solutions Ltda. apresenta proposta de monitoramento aerofotogramétrico de alta precisão para avaliar o alargamento artificial da Praia dos Ingleses e monitorar o avanço das dunas urbanas. Com infraestrutura própria, equipe técnica qualificada e tecnologia de ponta, garantimos precisão centimétrica e produtos prontos para decisão.</p>
+      
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+        <div class="stat-card">
+          <div class="stat-label">Duração</div>
+          <div class="stat-value">12</div>
+          <div class="stat-label">meses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Campanhas</div>
+          <div class="stat-value">3</div>
+          <div class="stat-label">sazonais</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Resolução</div>
+          <div class="stat-value">2.5</div>
+          <div class="stat-label">cm/pixel</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Precisão</div>
+          <div class="stat-value">5</div>
+          <div class="stat-label">cm (Z)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Área</div>
+          <div class="stat-value">3.2</div>
+          <div class="stat-label">km de orla</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Investimento</div>
+          <div class="stat-value">R$</div>
+          <div class="stat-label">1.619.820</div>
+        </div>
+      </div>
+
+      <h3>Diferenciais Competitivos</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>✓ Equipe dedicada</strong>
+          <p>12 profissionais (pilotos, topógrafos, analistas) 100% comprometidos com o projeto.</p>
+        </div>
+        <div class="card">
+          <strong>✓ Infraestrutura própria</strong>
+          <p>Sede, equipamentos, computadores e servidores de processamento integrados.</p>
+        </div>
+        <div class="card">
+          <strong>✓ Tecnologia consolidada</strong>
+          <p>DJI Matrice 350 RTK, Trimble GNSS, Pix4D, ArcGIS Pro, processamento em GPU.</p>
+        </div>
+        <div class="card">
+          <strong>✓ Precisão centimétrica</strong>
+          <p>Garantia de 5 cm de acurácia posicional vertical (contrato SLA).</p>
+        </div>
+        <div class="card">
+          <strong>✓ Metodologia validada</strong>
+          <p>12 projetos similares executados em Balneário Camboriú, Jaguaruna e Torres.</p>
+        </div>
+        <div class="card">
+          <strong>✓ Custo-benefício</strong>
+          <p>20-30% mais barato que a concorrência para qualidade equivalente.</p>
+        </div>
+      </div>
+
+      <h3>Produtos e Entregas</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Por campanha:</strong>
+          <ul>
+            <li>Ortomosaico 2.5 cm/pixel (GeoTIFF, ECW)</li>
+            <li>Modelo Digital de Superfície 3D (OBJ, LAS)</li>
+            <li>Modelo Digital de Terreno (LAS, ASC)</li>
+            <li>Relatório técnico com controle de qualidade</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Análises comparativas:</strong>
+          <ul>
+            <li>Mapa de diferença (DoD) entre campanhas</li>
+            <li>Cálculos volumétricos (ganho/perda de sedimentos)</li>
+            <li>Série temporal de linha de costa (shapefile, KML)</li>
+            <li>Dashboard online interativo</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Divulgação:</strong>
+          <ul>
+            <li>Relatório final executivo</li>
+            <li>Apresentação técnica aos stakeholders</li>
+            <li>Treinamento 8h para equipe do cliente</li>
+            <li>Suporte técnico 6 meses pós-entrega</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTEXTO E OPORTUNIDADE -->
+    <section id="contexto" class="tab-panel">
+      <h2>Contexto e Oportunidade de Mercado</h2>
+      
+      <h3>Situação Atual</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Problemas técnicos</strong>
+          <ul>
+            <li>Incerteza sobre a eficácia do alargamento artificial recentemente executado.</li>
+            <li>Risco crescente de avanço das dunas sobre a infraestrutura urbana.</li>
+            <li>Falta de dados quantitativos para tomada de decisão.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Transformações em curso</strong>
+          <ul>
+            <li>Adensamento residencial e verticalização na orla.</li>
+            <li>Alta sazonalidade turística intensificando pressão na faixa costeira.</li>
+            <li>Reorganização viária em zona urbana adjacente.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Riscos e gestão urbana</strong>
+          <ul>
+            <li>Possível encobrimento de vias e lotes por avanço de areia.</li>
+            <li>Impacto em drenagem, acessos e mobiliário urbano.</li>
+            <li>Necessidade de zoneamento adequado praia-bairro.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Oportunidade de Mercado</h3>
+      <div class="card">
+        <table>
+          <tr>
+            <th>Indicador</th>
+            <th>Valor</th>
+            <th>Observação</th>
+          </tr>
+          <tr>
+            <td>Mercado catarinense de monitoramento costeiro</td>
+            <td class="highlight">R$ 15-20 milhões/ano</td>
+            <td>Potencial anual em SC</td>
+          </tr>
+          <tr>
+            <td>Crescimento anual pós-eventos climáticos</td>
+            <td class="highlight">18%</td>
+            <td>Tendência de crescimento</td>
+          </tr>
+          <tr>
+            <td>Exigência de órgãos ambientais</td>
+            <td class="highlight">Crescente</td>
+            <td>Monitoramento sistemático obrigatório</td>
+          </tr>
+          <tr>
+            <td>Praias críticas em SC</td>
+            <td class="highlight">15+</td>
+            <td>Potencial de replicação</td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>Por que Aerofotogrametria</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Série temporal de alta resolução</strong>
+          <p>Medir deslocamento de dunas e frente de praia em escala centimétrica ao longo de 12 meses.</p>
+        </div>
+        <div class="card">
+          <strong>Integração com dados urbanos</strong>
+          <p>Correlacionar mudanças costeiras com fluxo demográfico, turístico e infraestrutura.</p>
+        </div>
+        <div class="card">
+          <strong>Base transparente para decisão</strong>
+          <p>Evidências objetivas para diálogo entre gestão municipal, moradores e setor turístico.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESCOPO DE SERVIÇOS -->
+    <section id="escopo" class="tab-panel">
+      <h2>Escopo de Serviços</h2>
+      
+      <h3>Fases do Projeto</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>FASE 1: PLANEJAMENTO E PREPARAÇÃO (Mês 1)</strong>
+          <ul>
+            <li>Análise técnica detalhada da área</li>
+            <li>Obtenção de licenças (DECEA, ANAC, órgãos ambientais)</li>
+            <li>Planejamento otimizado das missões de voo</li>
+            <li>Desenvolvimento de protocolos de qualidade</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>FASE 2: AQUISIÇÃO DE DADOS (Meses 2, 7, 10)</strong>
+          <ul>
+            <li>3 campanhas aerofotogramétricas completas</li>
+            <li>Coleta de 25 pontos de controle geodésicos (GCPs)</li>
+            <li>Registro de condições ambientais</li>
+            <li>Backup em tempo real dos dados</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>FASE 3: PROCESSAMENTO E ANÁLISE (Meses 3-4, 8-9, 11-12)</strong>
+          <ul>
+            <li>Processamento fotogramétrico de alta precisão</li>
+            <li>Geração de produtos geoespaciais</li>
+            <li>Análises quantitativas de volume e movimentação</li>
+            <li>Validação cruzada dos resultados</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>FASE 4: RELATORIAL E ENTREGA (Contínuo)</strong>
+          <ul>
+            <li>Relatórios técnicos após cada campanha</li>
+            <li>Dashboard online de monitoramento</li>
+            <li>Relatório final executivo</li>
+            <li>Apresentação técnica aos stakeholders</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Especificações Técnicas Garantidas</h3>
+      <div class="card">
+        <table>
+          <tr>
+            <th>Parâmetro</th>
+            <th>Valor</th>
+            <th>Justificativa</th>
+          </tr>
+          <tr>
+            <td>Resolução espacial (GSD)</td>
+            <td class="highlight">2,5 cm/pixel</td>
+            <td>Definição clara de feições costeiras</td>
+          </tr>
+          <tr>
+            <td>Precisão posicional (X,Y)</td>
+            <td class="highlight">3 cm</td>
+            <td>Medições acuradas de deslocamento</td>
+          </tr>
+          <tr>
+            <td>Precisão posicional (Z)</td>
+            <td class="highlight">5 cm</td>
+            <td>Análises volumétricas confiáveis</td>
+          </tr>
+          <tr>
+            <td>Área coberta por campanha</td>
+            <td class="highlight">3,2 km de orla</td>
+            <td>Cobertura completa do trecho</td>
+          </tr>
+          <tr>
+            <td>Taxa de cobertura longitudinal</td>
+            <td class="highlight">≥80%</td>
+            <td>Sobreposição em direção de voo</td>
+          </tr>
+          <tr>
+            <td>Taxa de cobertura lateral</td>
+            <td class="highlight">≥70%</td>
+            <td>Sobreposição entre faixas</td>
+          </tr>
+          <tr>
+            <td>Formatos de entrega</td>
+            <td class="highlight">GeoTIFF, LAS, OBJ, Shapefile</td>
+            <td>Compatível com AutoCAD, ArcGIS, QGIS</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- INFRAESTRUTURA -->
+    <section id="infraestrutura" class="tab-panel">
+      <h2>Infraestrutura e Equipamentos Próprios</h2>
+      
+      <h3>Estrutura Física - Sede Proprietária</h3>
+      <div class="card">
+        <ul>
+          <li><strong>Endereço:</strong> Av. Mauro Ramos, 700 - Centro, Florianópolis/SC</li>
+          <li><strong>Área total:</strong> 120 m²</li>
+          <li><strong>Instalações:</strong> 2 salas de processamento, 1 laboratório de equipamentos, 1 sala de reuniões, estacionamento privativo</li>
+          <li><strong>Infraestrutura técnica:</strong> Backup com nobreak, gerador, link dedicado 500 Mbps</li>
+        </ul>
+      </div>
+
+      <h3>Frota de Equipamentos Proprietários</h3>
+      <div class="card" style="overflow-x:auto;">
+        <table>
+          <tr>
+            <th>Equipamento</th>
+            <th>Modelo/Especificação</th>
+            <th>Quant.</th>
+            <th>Valor de Mercado</th>
+            <th>Status</th>
+          </tr>
+          <tr class="row-stage">
+            <td>Drone RTK</td>
+            <td>DJI Matrice 350 RTK + Zenmuse P1</td>
+            <td>2</td>
+            <td class="valor">R$ 380.000</td>
+            <td>Proprietário</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Drone Back-up</td>
+            <td>DJI Phantom 4 RTK</td>
+            <td>1</td>
+            <td class="valor">R$ 45.000</td>
+            <td>Proprietário</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Sensores</td>
+            <td>MicaSense Altum-PT (Termal+Multiespectral)</td>
+            <td>1</td>
+            <td class="valor">R$ 110.000</td>
+            <td>Proprietário</td>
+          </tr>
+          <tr class="row-stage">
+            <td>GNSS Geodésico</td>
+            <td>Trimble R12i com TSC7</td>
+            <td>2</td>
+            <td class="valor">R$ 140.000</td>
+            <td>Proprietário</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Estação Total</td>
+            <td>Leica TS16 Advanced</td>
+            <td>1</td>
+            <td class="valor">R$ 68.000</td>
+            <td>Proprietário</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Workstations</td>
+            <td>Dell Precision + NVIDIA RTX 6000 Ada</td>
+            <td>3</td>
+            <td class="valor">R$ 120.000</td>
+            <td>Proprietário</td>
+          </tr>
+          <tr class="row-stage">
+            <td>Servidor</td>
+            <td>NAS QNAP TVS-h1288X</td>
+            <td>1</td>
+            <td class="valor">R$ 35.000</td>
+            <td>Proprietário</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Veículos</td>
+            <td>Toyota Hilux 4x4 SRX</td>
+            <td>2</td>
+            <td class="valor">R$ 280.000</td>
+            <td>Proprietário</td>
+          </tr>
+          <tr class="row-fin">
+            <td>Software</td>
+            <td>Suite Pix4D + ArcGIS Pro</td>
+            <td>1</td>
+            <td class="valor">R$ 85.000</td>
+            <td>Licença anual</td>
+          </tr>
+          <tr class="row-fin">
+            <td colspan="3"><strong>Total Investido</strong></td>
+            <td class="valor"><strong>R$ 1.263.000</strong></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>Capacidade Técnica Instalada</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Processamento</strong>
+          <p class="highlight">500 ha/dia</p>
+          <p class="muted">Em resolução 3 cm com GPUs dedicadas</p>
+        </div>
+        <div class="card">
+          <strong>Armazenamento</strong>
+          <p class="highlight">200 TB</p>
+          <p class="muted">Em RAID 6 com sistema 3-2-1 backup</p>
+        </div>
+        <div class="card">
+          <strong>Conectividade</strong>
+          <p class="highlight">500 Mbps</p>
+          <p class="muted">Link dedicado para upload/download</p>
+        </div>
+        <div class="card">
+          <strong>Redundância</strong>
+          <p class="highlight">3-2-1</p>
+          <p class="muted">3 cópias, 2 mídias, 1 externa</p>
+        </div>
+      </div>
+
+      <h3>Equipe Técnica Própria (12 profissionais)</h3>
+      <div class="card" style="overflow-x:auto;">
+        <table>
+          <tr>
+            <th>Cargo</th>
+            <th>Quant.</th>
+            <th>Formação</th>
+            <th>Experiência</th>
+            <th>Salário Base (R$)</th>
+          </tr>
+          <tr class="row-stage">
+            <td>Diretor Técnico</td>
+            <td>1</td>
+            <td>Eng. Cartógrafo, M.Sc.</td>
+            <td>15 anos</td>
+            <td class="valor">25.000</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Gerente de Projeto</td>
+            <td>1</td>
+            <td>Geógrafo, Especialista</td>
+            <td>8 anos</td>
+            <td class="valor">15.000</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Piloto Sênior</td>
+            <td>1</td>
+            <td>Tecnólogo, CREA</td>
+            <td>6 anos</td>
+            <td class="valor">12.000</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Piloto Júnior</td>
+            <td>1</td>
+            <td>Técnico em Drone</td>
+            <td>2 anos</td>
+            <td class="valor">6.000</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Topógrafo Chefe</td>
+            <td>1</td>
+            <td>Eng. Agrimensor</td>
+            <td>10 anos</td>
+            <td class="valor">14.000</td>
+          </tr>
+          <tr class="row-stage">
+            <td>Assistente de Campo</td>
+            <td>1</td>
+            <td>Técnico Topografia</td>
+            <td>3 anos</td>
+            <td class="valor">4.500</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Analista Sênior Geoprocessamento</td>
+            <td>2</td>
+            <td>Especialista, M.Sc.</td>
+            <td>5 anos</td>
+            <td class="valor">10.000</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Analista Júnior Geoprocessamento</td>
+            <td>1</td>
+            <td>Formado</td>
+            <td>1 ano</td>
+            <td class="valor">3.500</td>
+          </tr>
+          <tr class="row-stage">
+            <td>Técnico de Suporte</td>
+            <td>1</td>
+            <td>Redes/Computação</td>
+            <td>4 anos</td>
+            <td class="valor">5.500</td>
+          </tr>
+          <tr class="row-fin">
+            <td colspan="2"><strong>Folha Mensal Bruta</strong></td>
+            <td colspan="2"></td>
+            <td class="valor"><strong>102.700</strong></td>
+          </tr>
+          <tr class="row-fin">
+            <td colspan="2"><strong>Folha com Encargos (40%)</strong></td>
+            <td colspan="2"></td>
+            <td class="valor"><strong>143.780</strong></td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- METODOLOGIA -->
+    <section id="metodologia" class="tab-panel">
+      <h2>Metodologia Técnica</h2>
+      
+      <h3>Protocolo de Aquisição</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Pré-voo</strong>
+          <ul>
+            <li>Verificação meteorológica em tempo real</li>
+            <li>Emissão de NOTAM (aviso aos pilotos)</li>
+            <li>Plano de voo otimizado em software dedicado</li>
+            <li>Calibração de sensores e verificação de baterias</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Campo</strong>
+          <ul>
+            <li>Implantação de 25 pontos de controle (GCPs) permanentes</li>
+            <li>Georreferenciamento com GNSS de dupla frequência (Trimble)</li>
+            <li>Registro fotográfico e checklist de qualidade</li>
+            <li>Condições ambientais (maré, vento, nebulosidade)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Voo</strong>
+          <ul>
+            <li>Altura: 80m (para GSD ≤ 2,5 cm)</li>
+            <li>Velocidade: 6 m/s</li>
+            <li>Sobreposição: 85% longitudinal / 75% lateral</li>
+            <li>Modo RTK para precisão em tempo real</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Pós-voo</strong>
+          <ul>
+            <li>Download imediato dos dados via USB</li>
+            <li>Verificação de cobertura e completude</li>
+            <li>Backup triplo (HD local, servidor, nuvem)</li>
+            <li>Relatório do dia com checklist finalizado</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Fluxo de Processamento</h3>
+      <div class="card">
+        <p><strong>Pipeline padrão:</strong></p>
+        <pre style="background:#0b1220;padding:12px;border-radius:8px;overflow-x:auto;color:var(--accent-2);font-size:0.9rem;">
+Imagens brutas
+    ↓
+Alinhamento inicial + Georreferenciamento (GCPs/PPK)
+    ↓
+Nuvem densa (10 pts/m²) + Classificação automática
+    ↓
+MDS (Modelo Digital de Superfície) + MDT (Modelo Digital de Terreno)
+    ↓
+Ortomosaico (2,5cm/pixel) + Análise de mudanças
+    ↓
+Mapas de diferença (DoD) + Cálculos volumétricos
+    ↓
+Relatórios automáticos + Dashboard web
+        </pre>
+      </div>
+
+      <h3>Controle de Qualidade</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Validação geométrica</strong>
+          <ul>
+            <li>Verificação de pontos de verificação independentes</li>
+            <li>RMSE (Root Mean Square Error) < 5 cm</li>
+            <li>Cobertura de nuvem > 80% da área</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Comparação com dados externos</strong>
+          <ul>
+            <li>Cotejo com LIDAR disponível (se houver)</li>
+            <li>Comparação com medições topográficas convencionais</li>
+            <li>Análise de consistência entre campanhas</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Análise estatística</strong>
+          <ul>
+            <li>Cálculo de desvio padrão de erros</li>
+            <li>Teste de autocorrelação espacial</li>
+            <li>Relatório de incerteza por produto</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Auditoria</strong>
+          <ul>
+            <li>Revisão interna pós-processamento</li>
+            <li>Auditoria externa (opcional)</li>
+            <li>Documentação completa do processo</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CRONOGRAMA -->
+    <section id="cronograma" class="tab-panel">
+      <h2>Cronograma de Execução (12 meses)</h2>
+      
+      <h3>Marcos Críticos</h3>
+      <div class="grid">
+        <div class="stat-card">
+          <div class="stat-label">Dia 30</div>
+          <div class="stat-value">Licenças</div>
+          <p style="color:var(--muted);font-size:0.85rem;">Obtidas</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Dia 45</div>
+          <div class="stat-value">Camp. 1</div>
+          <p style="color:var(--muted);font-size:0.85rem;">Concluída</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Dia 90</div>
+          <div class="stat-value">Relatório 1</div>
+          <p style="color:var(--muted);font-size:0.85rem;">Entregue</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Dia 180</div>
+          <div class="stat-value">Dashboard</div>
+          <p style="color:var(--muted);font-size:0.85rem;">Online</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Dia 300</div>
+          <div class="stat-value">Camp. 3</div>
+          <p style="color:var(--muted);font-size:0.85rem;">Concluída</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Dia 365</div>
+          <div class="stat-value">Projeto</div>
+          <p style="color:var(--muted);font-size:0.85rem;">Finalizado</p>
+        </div>
+      </div>
+
+      <h3>Cronograma Sintético</h3>
+      <div class="card" style="overflow-x:auto;">
+        <table class="timeline">
+          <tr>
+            <th>Atividade</th><th>M1</th><th>M2</th><th>M3-4</th><th>M5-6</th><th>M7</th><th>M8-9</th><th>M10</th><th>M11-12</th><th>Entrega</th>
+          </tr>
+          <tr class="row-stage"><td>Planejamento + Licenças</td><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Licenças OK</td></tr>
+          <tr class="row-campo"><td>Campanha 1 (voo)</td><td></td><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td><td>Imagens</td></tr>
+          <tr class="row-proc"><td>Processamento Camp. 1</td><td></td><td></td><td>●</td><td></td><td></td><td></td><td></td><td></td><td>Orto+MDS</td></tr>
+          <tr class="row-div"><td>Relatório Camp. 1</td><td></td><td></td><td>●</td><td></td><td></td><td></td><td></td><td></td><td>Relatório</td></tr>
+          <tr class="row-campo"><td>Monitoramento/DoD</td><td></td><td></td><td></td><td>●</td><td></td><td></td><td></td><td></td><td>DoD 1-2</td></tr>
+          <tr class="row-campo"><td>Campanha 2 (voo)</td><td></td><td></td><td></td><td></td><td>●</td><td></td><td></td><td></td><td>Imagens</td></tr>
+          <tr class="row-proc"><td>Processamento Camp. 2</td><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td><td></td><td>Orto+MDS</td></tr>
+          <tr class="row-campo"><td>Campanha 3 (voo)</td><td></td><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td><td>Imagens</td></tr>
+          <tr class="row-proc"><td>Processamento Camp. 3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>●</td><td>Orto+MDS</td></tr>
+          <tr class="row-fin"><td>DoD finais + Síntese</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>●</td><td>DoD final</td></tr>
+          <tr class="row-div"><td>Relatório Final + Seminário</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>●</td><td>Evento</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ORÇAMENTO -->
+    <section id="orcamento" class="tab-panel">
+      <h2>Investimento e Orçamento</h2>
+      
+      <h3>Orçamento do Projeto (12 meses)</h3>
+      <div class="card" style="overflow-x:auto;">
+        <table>
+          <tr>
+            <th>Rubrica</th>
+            <th>Custo Direto (R$)</th>
+            <th>Percentual</th>
+            <th>Justificativa</th>
+          </tr>
+          <tr class="row-stage">
+            <td>Mão-de-Obra Técnica</td>
+            <td class="valor">689.040</td>
+            <td>49,2%</td>
+            <td>12 profissionais dedicados durante 12 meses</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Equipamentos (depreciação)</td>
+            <td class="valor">189.450</td>
+            <td>13,5%</td>
+            <td>15% anual do patrimônio total</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Processamento/Software</td>
+            <td class="valor">85.000</td>
+            <td>6,1%</td>
+            <td>Licenças anuais + computação em nuvem</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Logística e Campo</td>
+            <td class="valor">125.000</td>
+            <td>8,9%</td>
+            <td>Combustível, diárias, manutenção de campo</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Infraestrutura</td>
+            <td class="valor">120.000</td>
+            <td>8,6%</td>
+            <td>Aluguel, energia, internet, segurança</td>
+          </tr>
+          <tr class="row-stage">
+            <td>Administrativo</td>
+            <td class="valor">72.000</td>
+            <td>5,1%</td>
+            <td>Pessoal administrativo + escritório</td>
+          </tr>
+          <tr class="row-div">
+            <td>Contingência (10%)</td>
+            <td class="valor">128.049</td>
+            <td>9,1%</td>
+            <td>Imprevistos técnicos e operacionais</td>
+          </tr>
+          <tr class="row-fin">
+            <td colspan="2"></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr class="row-fin">
+            <td><strong>Custos Operacionais</strong></td>
+            <td class="valor"><strong>1.408.539</strong></td>
+            <td colspan="2"></td>
+          </tr>
+          <tr class="row-fin">
+            <td><strong>Margem Operacional (15%)</strong></td>
+            <td class="valor"><strong>211.281</strong></td>
+            <td><strong>15%</strong></td>
+            <td>Lucro operacional</td>
+          </tr>
+          <tr class="row-fin">
+            <td><strong>TOTAL DO PROJETO</strong></td>
+            <td class="valor"><strong>1.619.820</strong></td>
+            <td><strong>100%</strong></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>Formas de Pagamento Propostas</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>À vista</strong>
+          <p class="highlight" style="font-size:1.3rem;">R$ 1.457.838</p>
+          <p class="muted">(10% desconto)</p>
+        </div>
+        <div class="card">
+          <strong>Parcelado em 12x</strong>
+          <p class="highlight" style="font-size:1.3rem;">R$ 134.985/mês</p>
+          <p class="muted">(sem juros)</p>
+        </div>
+        <div class="card">
+          <strong>Por fases</strong>
+          <ul style="margin-top:8px;">
+            <li>Fase 1 (30%): R$ 485.946</li>
+            <li>Fase 2 (40%): R$ 647.928</li>
+            <li>Fase 3 (30%): R$ 485.946</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Análise Comparativa</h3>
+      <div class="card">
+        <table>
+          <tr>
+            <th>Método</th>
+            <th>Investimento</th>
+            <th>Comparação com Nossa Solução</th>
+            <th>Observação</th>
+          </tr>
+          <tr class="row-stage">
+            <td>Nossa solução (Aerofotogrametria)</td>
+            <td class="valor">R$ 1.619.820</td>
+            <td class="highlight">Referência</td>
+            <td>Melhor custo-benefício</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Topografia convencional</td>
+            <td class="valor">R$ 2.800.000</td>
+            <td>+75%</td>
+            <td>Lenta, cara, menos precisão</td>
+          </tr>
+          <tr class="row-proc">
+            <td>LIDAR aerotransportado</td>
+            <td class="valor">R$ 3.500.000</td>
+            <td>+116%</td>
+            <td>Muito caro para escala local</td>
+          </tr>
+          <tr class="row-stage">
+            <td>Satélite comercial</td>
+            <td class="valor">R$ 900.000</td>
+            <td>-44%</td>
+            <td>Mais barato, mas menor precisão (30-50 cm)</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- RISCOS -->
+    <section id="riscos" class="tab-panel">
+      <h2>Análise de Riscos e Mitigações</h2>
+      
+      <div class="card" style="overflow-x:auto;">
+        <table>
+          <tr>
+            <th>Risco</th>
+            <th>Probabilidade</th>
+            <th>Impacto</th>
+            <th>Estratégia de Mitigação</th>
+            <th>Responsável</th>
+          </tr>
+          <tr class="row-stage">
+            <td>Condições climáticas adversas</td>
+            <td>Alta</td>
+            <td>Médio</td>
+            <td>Janelas de voo flexíveis, monitoramento em tempo real, seguros</td>
+            <td>Piloto Sênior</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Falha de equipamentos</td>
+            <td>Média</td>
+            <td>Alto</td>
+            <td>Redundância de drones e sensores, manutenção preventiva, backup</td>
+            <td>Técnico Suporte</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Atraso nas licenças</td>
+            <td>Baixa</td>
+            <td>Alto</td>
+            <td>Processo iniciado 60 dias antes, consultoria especializada</td>
+            <td>Gerente Projeto</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Problemas de processamento</td>
+            <td>Baixa</td>
+            <td>Médio</td>
+            <td>Sistema em nuvem redundante, hardware extra, backup triplo</td>
+            <td>Analista Sênior</td>
+          </tr>
+          <tr class="row-stage">
+            <td>Variação de escopo</td>
+            <td>Média</td>
+            <td>Baixo</td>
+            <td>Contrato detalhado, change control formal, aprovações</td>
+            <td>Diretor Técnico</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Concorrência desleal</td>
+            <td>Baixa</td>
+            <td>Baixo</td>
+            <td>Diferenciação tecnológica, contratos de confidencialidade</td>
+            <td>Diretor Técnico</td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>Garantias e Compromissos</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Garantias Técnicas</strong>
+          <ul>
+            <li><strong>Precisão posicional:</strong> 5 cm (garantido por contrato SLA)</li>
+            <li><strong>Disponibilidade:</strong> 99,5% durante operações</li>
+            <li><strong>Tempo de processamento:</strong> ≤ 15 dias úteis por campanha</li>
+            <li><strong>Suporte técnico:</strong> 24/7 durante operações de campo</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Seguros e Responsabilidades</strong>
+          <ul>
+            <li><strong>Cobertura de equipamentos:</strong> R$ 1,5 milhões</li>
+            <li><strong>Responsabilidade civil:</strong> R$ 5 milhões</li>
+            <li><strong>Acidentes pessoais:</strong> Equipe completa segurada</li>
+            <li><strong>Conformidade legal:</strong> Todas as licenças em dia</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Compromissos da Empresa</strong>
+          <ul>
+            <li>Transparência total nos métodos utilizados</li>
+            <li>Confidencialidade absoluta dos dados do cliente</li>
+            <li>Qualidade certificada (ISO 9001 em implementação)</li>
+            <li>Sustentabilidade ambiental nas operações</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIFERENCIAIS COMPETITIVOS -->
+    <section id="diferenciais" class="tab-panel">
+      <h2>Diferenciais Competitivos</h2>
+      
+      <h3>Tecnológicos</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>GPU de ponta</strong>
+          <p>Processamento 5x mais rápido que a concorrência com NVIDIA RTX 6000 Ada dedicada.</p>
+        </div>
+        <div class="card">
+          <strong>Algoritmos proprietários</strong>
+          <p>Análise de mudança otimizada para ambientes costeiros com validação automática.</p>
+        </div>
+        <div class="card">
+          <strong>Integração multidados</strong>
+          <p>Correlação automática com dados de marés, ondas e meteorologia em tempo real.</p>
+        </div>
+        <div class="card">
+          <strong>Dashboard inteligente</strong>
+          <p>Alertas automáticos de anomalias e visualização interativa 3D com histórico.</p>
+        </div>
+      </div>
+
+      <h3>Operacionais</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Resposta rápida</strong>
+          <p>Capacidade de mobilização em 4 horas para emergências ou monitoramento urgente.</p>
+        </div>
+        <div class="card">
+          <strong>Equipe 100% dedicada</strong>
+          <p>Sem terceirização; coordenação direta, know-how consolidado e responsabilidade clara.</p>
+        </div>
+        <div class="card">
+          <strong>Frota completa</strong>
+          <p>Todos os equipamentos próprios; não dependemos de fornecedores ou subcontratações.</p>
+        </div>
+        <div class="card">
+          <strong>Metodologia validada</strong>
+          <p>12 projetos similares executados com sucesso em Camboriú, Jaguaruna e Torres.</p>
+        </div>
+      </div>
+
+      <h3>Comerciais</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Preço competitivo</strong>
+          <p>20-30% abaixo do mercado para qualidade equivalente; melhor custo-benefício garantido.</p>
+        </div>
+        <div class="card">
+          <strong>Flexibilidade total</strong>
+          <p>Múltiplas formas de pagamento (à vista, parcelado, por fases) adaptadas ao cliente.</p>
+        </div>
+        <div class="card">
+          <strong>Relacionamento transparente</strong>
+          <p>Comunicação clara, relatórios periódicos, acesso aos dados em tempo real.</p>
+        </div>
+        <div class="card">
+          <strong>Portfolio consolidado</strong>
+          <p>Casos de sucesso disponíveis; referências verificáveis de clientes satisfeitos.</p>
+        </div>
+      </div>
+
+      <h3>Próximos Passos</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>1. Reunião de Alinhamento</strong>
+          <p>2 horas para detalhamento da proposta e esclarecimento de dúvidas (sem compromisso).</p>
+        </div>
+        <div class="card">
+          <strong>2. Visita Técnica à Área</strong>
+          <p>Demonstração gratuita da metodologia e reconhecimento do trecho de estudo.</p>
+        </div>
+        <div class="card">
+          <strong>3. Proposta Formal</strong>
+          <p>Documento contratual com todos os detalhes técnicos, cronograma e condições.</p>
+        </div>
+        <div class="card">
+          <strong>4. Assinatura e Início</strong>
+          <p>Contrato assinado e mobilização da equipe em até 15 dias úteis.</p>
+        </div>
+      </div>
+
+      <h3>Contato</h3>
+      <div class="card" style="text-align:center;border:2px solid var(--accent-3);">
+        <strong>GeoCoastal Solutions Ltda.</strong><br>
+        CNPJ: XX.XXX.XXX/0001-XX<br><br>
+        <strong>Endereço:</strong> Av. Mauro Ramos, 700 - Centro<br>
+        Florianópolis/SC - CEP: 88020-302<br><br>
+        <strong>Contato:</strong><br>
+        📞 (48) 3224-7000<br>
+        📧 projetos@geocoastal.com.br<br>
+        🌐 www.geocoastal.com.br<br><br>
+        Seg-Sex: 8h-18h
+      </div>
+    </section>
+
+    <!-- MAPA DE ESTUDO -->
+    <section id="mapa" class="tab-panel">
+      <h2>Mapa de Estudo - Praia dos Ingleses</h2>
+      <p>Visualização interativa do trecho monitorado, com delimitação da área de cobertura, linha de costa, zona urbana e pontos de controle geodésicos (GCPs).</p>
+      
+      <div class="card" style="position:relative;padding-top:56.25%;border:1px solid var(--stroke);border-radius:12px;overflow:hidden;background:#0b1220;margin-bottom:16px;">
+        <iframe src="https://caetanoronan.github.io/monitoramento-costeiro-ingleses/mapa_estudo.html" title="Mapa Praia dos Ingleses" style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+      </div>
+      
+      <p style="text-align:center;"><a href="https://caetanoronan.github.io/monitoramento-costeiro-ingleses/mapa_estudo.html" target="_blank" style="color:var(--accent-3);text-decoration:none;font-weight:700;font-size:1rem;">Abrir mapa em tela cheia ↗</a></p>
+      
+      <h3>Características do Trecho</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Localização</strong>
+          <ul>
+            <li>Litoral norte de Florianópolis/SC</li>
+            <li>Bairro: Ingleses</li>
+            <li>Coordenadas: ~27.45°S, 48.35°W</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Extensão</strong>
+          <ul>
+            <li>Trecho costeiro: 3,2 km de orla</li>
+            <li>Profundidade: do nível do mar até 150m terra adentro</li>
+            <li>Área total: ~0,5 km²</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Contexto</strong>
+          <ul>
+            <li>Zona urbana de alta densidade</li>
+            <li>Infraestrutura turística concentrada</li>
+            <li>Alargamento artificial recente executado</li>
+            <li>Avanço dunar em zonas críticas</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>Elementos Monitorados</strong>
+          <ul>
+            <li>Frente de praia (linha de preamar)</li>
+            <li>Frente dunar (limite vegetação/areia)</li>
+            <li>Área urbana adjacente</li>
+            <li>Pontos de controle geodésico (GCPs)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Amostragem Espacial</h3>
+      <div class="card">
+        <table>
+          <tr>
+            <th>Elemento</th>
+            <th>Quantidade</th>
+            <th>Espaçamento</th>
+            <th>Função</th>
+          </tr>
+          <tr class="row-stage">
+            <td>Pontos de Controle (GCPs)</td>
+            <td>25</td>
+            <td>~130m (ao longo da praia)</td>
+            <td>Georreferenciamento e validação de precisão</td>
+          </tr>
+          <tr class="row-campo">
+            <td>Faixas de voo (ortomosaico)</td>
+            <td>15-18</td>
+            <td>25% lateral (70%+ recobrimento)</td>
+            <td>Cobertura completa da área</td>
+          </tr>
+          <tr class="row-proc">
+            <td>Pontos de verificação independentes</td>
+            <td>10</td>
+            <td>Estratégicos em feições críticas</td>
+            <td>Validação cruzada de precisão</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- GLOSSÁRIO -->
+    <section id="glossario" class="tab-panel">
+      <h2>Glossário Técnico</h2>
+      <p>Terminologia especializada em aerofotogrametria, geoprocessamento e monitoramento costeiro utilizados neste projeto.</p>
+      
+      <div class="grid">
+        <div class="card">
+          <strong>Aerofotogrametria</strong>
+          <p>Técnica de obtenção de medidas e coordenadas de objetos a partir de fotografias aéreas, utilizando drones ou aeronaves tripuladas.</p>
+        </div>
+        <div class="card">
+          <strong>DoD (Difference of DSM)</strong>
+          <p>Mapa de diferença entre Modelos Digitais de Superfície de campanhas distintas, permite estimar erosão, deposição e cálculo volumétrico de sedimentos.</p>
+        </div>
+        <div class="card">
+          <strong>GCP (Ground Control Point)</strong>
+          <p>Ponto de controle implantado no solo com coordenadas geodésicas conhecidas, utilizado para georreferenciamento preciso de produtos fotogramétricos.</p>
+        </div>
+        <div class="card">
+          <strong>GSD (Ground Sample Distance)</strong>
+          <p>Resolução espacial expressa em cm/pixel; define o tamanho do pixel no terreno. GSD ≤ 2,5 cm garante visualização clara de feições costeiras.</p>
+        </div>
+        <div class="card">
+          <strong>GNSS (Global Navigation Satellite System)</strong>
+          <p>Sistema de posicionamento por satélite (GPS, GLONASS, Galileo, BeiDou). Modo RTK oferece precisão em tempo real de poucos centímetros.</p>
+        </div>
+        <div class="card">
+          <strong>MDS (Modelo Digital de Superfície)</strong>
+          <p>Modelo 3D de elevação que representa todas as superfícies (solo, vegetação, construções). Base para análises volumétricas e geração de ortomosaicos.</p>
+        </div>
+        <div class="card">
+          <strong>MDT (Modelo Digital de Terreno)</strong>
+          <p>Modelo 3D de elevação apenas da superfície do solo, com vegetação e construções removidas. Utilitário para análises de drenagem e relevo natural.</p>
+        </div>
+        <div class="card">
+          <strong>Nuvem de Pontos Densa</strong>
+          <p>Conjunto de milhões de pontos 3D gerado pelo algoritmo SfM, com densidade típica de 10+ pontos/m². Base para MDS, MDT e análises volumétricas.</p>
+        </div>
+        <div class="card">
+          <strong>Ortomosaico</strong>
+          <p>Imagem aérea corrigida geometricamente e costurada, com escala uniforme (1:1), adequada para medições em planta e análise temporal.</p>
+        </div>
+        <div class="card">
+          <strong>PPK (Post-Processing Kinematic)</strong>
+          <p>Técnica de correção de posição GNSS aplicada após o voo, correlacionando dados do drone com estação de referência, elevando acurácia de 5m para cm.</p>
+        </div>
+        <div class="card">
+          <strong>Recobrimento Longitudinal</strong>
+          <p>Sobreposição entre fotos consecutivas na direção de voo (85% típico). Essencial para reconstrução 3D e ortorretificação sem vazios.</p>
+        </div>
+        <div class="card">
+          <strong>Recobrimento Lateral</strong>
+          <p>Sobreposição entre faixas adjacentes de voo (70-75% típico). Garante cobertura contínua da área sem lacunas ou distorções nas bordas.</p>
+        </div>
+        <div class="card">
+          <strong>RMSE (Root Mean Square Error)</strong>
+          <p>Métrica de erro quadrático médio; medida de precisão dos produtos. Objetivo: RMSE &lt; 5 cm para produtos finais de alta precisão.</p>
+        </div>
+        <div class="card">
+          <strong>RTK (Real Time Kinematic)</strong>
+          <p>Modo GNSS que oferece correções em tempo real (via radio/rede), permitindo precisão cm durante voo. Drone recebe sinal de correção direto.</p>
+        </div>
+        <div class="card">
+          <strong>SfM (Structure from Motion)</strong>
+          <p>Algoritmo que reconstrói geometria 3D a partir de múltiplas imagens 2D com sobreposição, gerando nuvem de pontos e modelos texturizados.</p>
+        </div>
+        <div class="card">
+          <strong>Série Temporal</strong>
+          <p>Sequência de aquisições de dados em diferentes momentos (3 campanhas sazonais neste projeto), permitindo análise de mudanças e tendências.</p>
+        </div>
+        <div class="card">
+          <strong>Texturização 3D</strong>
+          <p>Aplicação das imagens RGB originais sobre nuvem de pontos ou mesh, criando modelos 3D com aparência realista (formato OBJ, DAE).</p>
+        </div>
+        <div class="card">
+          <strong>VANT / Drone</strong>
+          <p>Aeronave não tripulada de pequeno porte (&lt; 25 kg). Neste projeto: DJI Matrice 350 RTK para aquisições principais e Phantom 4 RTK como backup.</p>
+        </div>
+        <div class="card">
+          <strong>Validação Cruzada</strong>
+          <p>Processo de verificação de qualidade comparando resultados fotogramétricos com pontos de verificação independentes medidos em campo.</p>
+        </div>
+        <div class="card">
+          <strong>Vetor vs Raster</strong>
+          <p><strong>Raster:</strong> Imagem pixelada (ortomosaico, MDS em GeoTIFF). <strong>Vetor:</strong> Geometrias discretas (linha de costa, frente dunar em shapefile).</p>
+        </div>
+        <div class="card">
+          <strong>Zona Costeira</strong>
+          <p>Área de transição entre terra e mar, incluindo praia, dunas, linha de costa e zona urbana adjacente. Alvo principal do monitoramento neste projeto.</p>
+        </div>
+        <div class="card">
+          <strong>Alargamento Artificial</strong>
+          <p>Intervenção de engenharia que deposita sedimentos para aumentar largura da praia, protegendo infraestrutura costeira de erosão e eventos extremos.</p>
+        </div>
+        <div class="card">
+          <strong>Avanço Dunar</strong>
+          <p>Migração de dunas sobre área urbana causada por vento e dinâmica sedimentar; fenômeno monitorado para alertar e mitigar impactos em edificações e vias.</p>
+        </div>
+      </div>
+
+      <h3>Abreviações e Siglas</h3>
+      <div class="card">
+        <table style="font-size:0.9rem;">
+          <tr>
+            <th style="width:25%;">Sigla</th>
+            <th>Significado</th>
+            <th>Contexto</th>
+          </tr>
+          <tr class="row-stage">
+            <td><strong>ANAC</strong></td>
+            <td>Agência Nacional de Aviação Civil</td>
+            <td>Órgão regulador de drones no Brasil</td>
+          </tr>
+          <tr class="row-campo">
+            <td><strong>DECEA</strong></td>
+            <td>Departamento de Controle do Espaço Aéreo</td>
+            <td>Aprovação de NOTAM e operações de voo</td>
+          </tr>
+          <tr class="row-proc">
+            <td><strong>GIS / SIG</strong></td>
+            <td>Geographic Information System / Sistema de Informação Geográfica</td>
+            <td>Software: QGIS, ArcGIS Pro para análises espaciais</td>
+          </tr>
+          <tr class="row-stage">
+            <td><strong>GPU</strong></td>
+            <td>Graphics Processing Unit</td>
+            <td>Hardware de processamento acelerado (NVIDIA RTX 6000 Ada)</td>
+          </tr>
+          <tr class="row-campo">
+            <td><strong>HDD / SSD</strong></td>
+            <td>Hard Disk Drive / Solid State Drive</td>
+            <td>Armazenamento de dados; 200 TB em RAID 6</td>
+          </tr>
+          <tr class="row-proc">
+            <td><strong>ISO</strong></td>
+            <td>International Organization for Standardization</td>
+            <td>Qualidade (ISO 9001 em implementação)</td>
+          </tr>
+          <tr class="row-stage">
+            <td><strong>LAZ / LAS</strong></td>
+            <td>Formato de nuvem de pontos (comprimido/descomprimido)</td>
+            <td>Entrega de modelos 3D e MDS/MDT</td>
+          </tr>
+          <tr class="row-campo">
+            <td><strong>NAS</strong></td>
+            <td>Network Attached Storage</td>
+            <td>Servidor QNAP TVS-h1288X para armazenamento centralizado</td>
+          </tr>
+          <tr class="row-proc">
+            <td><strong>NOTAM</strong></td>
+            <td>Notice to Airmen</td>
+            <td>Aviso de voo emitido pelo DECEA antes de cada operação</td>
+          </tr>
+          <tr class="row-stage">
+            <td><strong>OBJ / DAE</strong></td>
+            <td>Formatos de modelos 3D texturizados</td>
+            <td>Visualização interativa e análise em software 3D</td>
+          </tr>
+          <tr class="row-campo">
+            <td><strong>RAID</strong></td>
+            <td>Redundant Array of Independent Disks</td>
+            <td>Redundância de dados (RAID 6); proteção contra falhas</td>
+          </tr>
+          <tr class="row-proc">
+            <td><strong>CREA</strong></td>
+            <td>Conselho Regional de Engenharia e Agronomia</td>
+            <td>Certificação profissional de engenheiros e topógrafos</td>
+          </tr>
+          <tr class="row-stage">
+            <td><strong>SLA</strong></td>
+            <td>Service Level Agreement</td>
+            <td>Garantia contratual (ex: 99,5% disponibilidade)</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      Proposta válida por 30 dias · GeoCoastal Solutions Ltda. · Florianópolis/SC · Tel: (48) 3224-7000
+    </footer>
+  </div>
+  <script>
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.tab-panel');
+    const modeToggle = document.getElementById('modeToggle');
+    const rootBody = document.body;
+    let isDark = true;
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById(btn.dataset.tab);
+        if (target) target.classList.add('active');
+      });
+    });
+
+    const applyTheme = () => {
+      rootBody.classList.toggle('dark', isDark);
+      rootBody.classList.toggle('light', !isDark);
+      modeToggle.textContent = isDark ? 'Tema claro' : 'Tema escuro';
+    };
+    modeToggle.addEventListener('click', () => {
+      isDark = !isDark;
+      applyTheme();
+    });
+    applyTheme();
+  </script>
+</body>
+</html>

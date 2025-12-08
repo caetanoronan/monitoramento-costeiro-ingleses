@@ -439,6 +439,78 @@
 
     // Escala
     L.control.scale({ imperial: false, metric: true }).addTo(map);
+
+    // Rosa dos Ventos (Compass Rose)
+    L.Control.CompassRose = L.Control.extend({
+      onAdd: function(map) {
+        const container = L.DomUtil.create('div');
+        container.innerHTML = `
+          <svg width="120" height="120" viewBox="0 0 120 120" style="background:rgba(17, 24, 39, 0.85);border-radius:8px;border:1px solid rgba(44, 162, 95, 0.3);padding:8px;">
+            <!-- Círculo externo -->
+            <circle cx="60" cy="60" r="55" fill="none" stroke="rgba(44, 162, 95, 0.4)" stroke-width="1"/>
+            
+            <!-- Pontos cardeais principais (N, S, L, O) -->
+            <!-- Norte (N) - Triângulo vermelho -->
+            <g id="north">
+              <polygon points="60,15 65,35 55,35" fill="#ef4444" opacity="0.9"/>
+              <text x="60" y="10" font-size="14" font-weight="bold" fill="#ef4444" text-anchor="middle" font-family="Arial, sans-serif">N</text>
+            </g>
+            
+            <!-- Sul (S) -->
+            <g id="south">
+              <polygon points="60,105 55,85 65,85" fill="#94a3b8" opacity="0.7"/>
+              <text x="60" y="118" font-size="14" font-weight="bold" fill="#94a3b8" text-anchor="middle" font-family="Arial, sans-serif">S</text>
+            </g>
+            
+            <!-- Leste (L) -->
+            <g id="east">
+              <polygon points="105,60 85,55 85,65" fill="#94a3b8" opacity="0.7"/>
+              <text x="110" y="65" font-size="14" font-weight="bold" fill="#94a3b8" text-anchor="middle" font-family="Arial, sans-serif">L</text>
+            </g>
+            
+            <!-- Oeste (O) -->
+            <g id="west">
+              <polygon points="15,60 35,55 35,65" fill="#94a3b8" opacity="0.7"/>
+              <text x="10" y="65" font-size="14" font-weight="bold" fill="#94a3b8" text-anchor="middle" font-family="Arial, sans-serif">O</text>
+            </g>
+            
+            <!-- Pontos intermediários (NE, SE, SW, NW) - linhas delgadas -->
+            <line x1="60" y1="60" x2="82" y2="38" stroke="rgba(153, 216, 201, 0.3)" stroke-width="0.5"/>
+            <line x1="60" y1="60" x2="82" y2="82" stroke="rgba(153, 216, 201, 0.3)" stroke-width="0.5"/>
+            <line x1="60" y1="60" x2="38" y2="82" stroke="rgba(153, 216, 201, 0.3)" stroke-width="0.5"/>
+            <line x1="60" y1="60" x2="38" y2="38" stroke="rgba(153, 216, 201, 0.3)" stroke-width="0.5"/>
+            
+            <!-- Linhas dos pontos cardeais principais -->
+            <line x1="60" y1="60" x2="60" y2="20" stroke="rgba(44, 162, 95, 0.5)" stroke-width="1.5"/>
+            <line x1="60" y1="60" x2="60" y2="100" stroke="rgba(44, 162, 95, 0.3)" stroke-width="1"/>
+            <line x1="60" y1="60" x2="100" y2="60" stroke="rgba(44, 162, 95, 0.3)" stroke-width="1"/>
+            <line x1="60" y1="60" x2="20" y2="60" stroke="rgba(44, 162, 95, 0.3)" stroke-width="1"/>
+            
+            <!-- Centro -->
+            <circle cx="60" cy="60" r="3" fill="#99d8c9"/>
+          </svg>
+        `;
+        
+        // Estilos
+        container.style.backgroundColor = 'transparent';
+        container.style.border = 'none';
+        container.style.width = 'auto';
+        container.style.height = 'auto';
+        container.style.padding = '5px';
+        
+        L.DomEvent.disableClickPropagation(container);
+        L.DomEvent.disableScrollPropagation(container);
+        
+        return container;
+      }
+    });
+
+    L.control.compassRose = function(opts) {
+      return new L.Control.CompassRose(opts);
+    };
+
+    // Adicionar rosa dos ventos ao mapa (canto superior direito)
+    L.control.compassRose({ position: 'topright' }).addTo(map);
   </script>
 </body>
 </html>
